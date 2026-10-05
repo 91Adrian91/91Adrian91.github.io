@@ -31,7 +31,7 @@
       text-align: center;
     }
 
-    /* Grid para colocar los bloques individuales */
+    /* Grid para colocar los bloques */
     .grid-container {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
@@ -40,7 +40,7 @@
       width: 100%;
     }
 
-    /* Tarjeta o bloque individual para cada Pokémon */
+    /* Tarjetas interactivas con cursor tipo botón */
     .pokemon-card {
       background: rgba(20, 20, 35, 0.75);
       backdrop-filter: blur(10px);
@@ -51,12 +51,28 @@
       flex-direction: column;
       align-items: center;
       box-shadow: 0 10px 25px rgba(0, 0, 0, 0.7);
-      transition: transform 0.3s ease, border-color 0.3s ease;
+      cursor: pointer;
+      user-select: none;
+      transition: transform 0.2s ease, border-color 0.3s ease, box-shadow 0.3s ease;
     }
 
     .pokemon-card:hover {
       transform: translateY(-8px);
       border-color: rgba(180, 140, 255, 0.5);
+      box-shadow: 0 12px 30px rgba(180, 140, 255, 0.25);
+    }
+
+    /* Animación de ataque/sacudida al hacer clic */
+    .pokemon-card.attack {
+      animation: attackAnim 0.5s ease-in-out;
+    }
+
+    @keyframes attackAnim {
+      0% { transform: scale(1); }
+      20% { transform: scale(1.1) translateY(-10px) rotate(-3deg); }
+      40% { transform: scale(1.1) translateY(-10px) rotate(3deg); }
+      60% { transform: scale(1.05) translateY(-5px) rotate(-1deg); }
+      100% { transform: scale(1); }
     }
 
     .pokemon-name {
@@ -67,7 +83,7 @@
       text-shadow: 0 0 8px rgba(255, 255, 255, 0.3);
     }
 
-    /* Tipos Pokémon (Badges con color) */
+    /* Tipos Pokémon */
     .types-container {
       display: flex;
       gap: 8px;
@@ -84,7 +100,6 @@
       box-shadow: 0 2px 5px rgba(0,0,0,0.5);
     }
 
-    /* Colores por tipo */
     .ground { background-color: #E0C068; color: #000; }
     .flying { background-color: #A98FF3; color: #000; }
     .ghost  { background-color: #705898; color: #fff; }
@@ -95,7 +110,7 @@
     .psychic{ background-color: #F85888; color: #fff; }
     .fairy  { background-color: #EE99AC; color: #000; }
 
-    /* Imagen GIF animada */
+    /* Sprite GIF */
     .pokemon-animated {
       height: 120px;
       width: auto;
@@ -113,8 +128,8 @@
 
   <div class="grid-container">
 
-    <!-- 1. Gliscor -->
-    <div class="pokemon-card">
+    <!-- Gliscor (ID 472) -->
+    <div class="pokemon-card" onclick="playCry(472, this)">
       <h2 class="pokemon-name">Gliscor</h2>
       <div class="types-container">
         <span class="type-badge ground">Tierra</span>
@@ -123,8 +138,8 @@
       <img class="pokemon-animated" src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/472.gif" alt="Gliscor">
     </div>
 
-    <!-- 2. Gengar -->
-    <div class="pokemon-card">
+    <!-- Gengar (ID 94) -->
+    <div class="pokemon-card" onclick="playCry(94, this)">
       <h2 class="pokemon-name">Gengar</h2>
       <div class="types-container">
         <span class="type-badge ghost">Fantasma</span>
@@ -133,8 +148,8 @@
       <img class="pokemon-animated" src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/94.gif" alt="Gengar">
     </div>
 
-    <!-- 3. Darkrai -->
-    <div class="pokemon-card">
+    <!-- Darkrai (ID 491) -->
+    <div class="pokemon-card" onclick="playCry(491, this)">
       <h2 class="pokemon-name">Darkrai</h2>
       <div class="types-container">
         <span class="type-badge dark">Siniestro</span>
@@ -142,8 +157,8 @@
       <img class="pokemon-animated" src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/491.gif" alt="Darkrai">
     </div>
 
-    <!-- 4. Glalie -->
-    <div class="pokemon-card">
+    <!-- Glalie (ID 362) -->
+    <div class="pokemon-card" onclick="playCry(362, this)">
       <h2 class="pokemon-name">Glalie</h2>
       <div class="types-container">
         <span class="type-badge ice">Hielo</span>
@@ -151,8 +166,8 @@
       <img class="pokemon-animated" src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/362.gif" alt="Glalie">
     </div>
 
-    <!-- 5. Metagross -->
-    <div class="pokemon-card">
+    <!-- Metagross (ID 376) -->
+    <div class="pokemon-card" onclick="playCry(376, this)">
       <h2 class="pokemon-name">Metagross</h2>
       <div class="types-container">
         <span class="type-badge steel">Acero</span>
@@ -161,8 +176,8 @@
       <img class="pokemon-animated" src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/376.gif" alt="Metagross">
     </div>
 
-    <!-- 6. Mimikyu -->
-    <div class="pokemon-card">
+    <!-- Mimikyu (ID 778) -->
+    <div class="pokemon-card" onclick="playCry(778, this)">
       <h2 class="pokemon-name">Mimikyu</h2>
       <div class="types-container">
         <span class="type-badge ghost">Fantasma</span>
@@ -172,6 +187,20 @@
     </div>
 
   </div>
+
+  <script>
+    function playCry(id, cardElement) {
+      // Reproduce el grito original de PokeAPI
+      const audio = new Audio(`https://raw.githubusercontent.com/PokeAPI/cries/main/cries/pokemon/latest/${id}.ogg`);
+      audio.volume = 0.5;
+      audio.play();
+
+      // Efecto visual de movimiento al hacer clic
+      cardElement.classList.remove('attack');
+      void cardElement.offsetWidth; // Reinicia la animación
+      cardElement.classList.add('attack');
+    }
+  </script>
 
 </body>
 </html>
