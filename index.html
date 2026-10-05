@@ -15,79 +15,162 @@
       align-items: center;
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       color: #ffffff;
-      background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), 
+      background: linear-gradient(rgba(0, 0, 0, 0.65), rgba(0, 0, 0, 0.65)), 
                   url('https://images.unsplash.com/photo-1506703719100-a0f3a48c0f86?q=80&w=1920&auto=format&fit=crop');
       background-size: cover;
       background-position: center;
       background-attachment: fixed;
     }
 
-    .card {
+    h1 {
+      margin-bottom: 30px;
+      font-size: 2.5rem;
+      letter-spacing: 2px;
+      color: #e0e0ff;
+      text-shadow: 0 0 12px rgba(180, 140, 255, 0.6);
+      text-align: center;
+    }
+
+    /* Grid para colocar los bloques individuales */
+    .grid-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+      gap: 25px;
+      max-width: 900px;
+      width: 100%;
+    }
+
+    /* Tarjeta o bloque individual para cada Pokémon */
+    .pokemon-card {
       background: rgba(20, 20, 35, 0.75);
       backdrop-filter: blur(10px);
       border: 1px solid rgba(255, 255, 255, 0.15);
       border-radius: 20px;
-      padding: 35px;
-      text-align: center;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7);
-      max-width: 750px;
-      width: 90%;
-    }
-
-    /* Layout en fila para colocar a los Pokémon lado a lado */
-    .pokemon-container {
-      display: flex;
-      justify-content: center;
-      align-items: flex-end;
-      gap: 40px;
-      flex-wrap: wrap;
-      margin-top: 10px;
-    }
-
-    .pokemon-card {
+      padding: 25px 15px;
       display: flex;
       flex-direction: column;
       align-items: center;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.7);
+      transition: transform 0.3s ease, border-color 0.3s ease;
+    }
+
+    .pokemon-card:hover {
+      transform: translateY(-8px);
+      border-color: rgba(180, 140, 255, 0.5);
     }
 
     .pokemon-name {
-      margin: 0 0 15px 0;
-      font-size: 2rem;
-      letter-spacing: 2px;
-      color: #e0e0ff;
-      text-shadow: 0 0 12px rgba(180, 140, 255, 0.6);
+      margin: 0 0 10px 0;
+      font-size: 1.5rem;
+      letter-spacing: 1px;
+      color: #ffffff;
+      text-shadow: 0 0 8px rgba(255, 255, 255, 0.3);
     }
 
-    /* Estilos de las imágenes animadas */
+    /* Tipos Pokémon (Badges con color) */
+    .types-container {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 15px;
+    }
+
+    .type-badge {
+      padding: 4px 10px;
+      border-radius: 12px;
+      font-size: 0.75rem;
+      font-weight: bold;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.5);
+    }
+
+    /* Colores por tipo */
+    .ground { background-color: #E0C068; color: #000; }
+    .flying { background-color: #A98FF3; color: #000; }
+    .ghost  { background-color: #705898; color: #fff; }
+    .poison { background-color: #A040A0; color: #fff; }
+    .dark   { background-color: #705848; color: #fff; }
+    .ice    { background-color: #98D8D8; color: #000; }
+    .steel  { background-color: #B8B8D0; color: #000; }
+    .psychic{ background-color: #F85888; color: #fff; }
+    .fairy  { background-color: #EE99AC; color: #000; }
+
+    /* Imagen GIF animada */
     .pokemon-animated {
-      height: 180px;
+      height: 120px;
       width: auto;
       object-fit: contain;
       image-rendering: -webkit-optimize-contrast;
       image-rendering: crisp-edges;
       image-rendering: pixelated;
-      filter: drop-shadow(0 10px 18px rgba(0, 0, 0, 0.8));
+      filter: drop-shadow(0 8px 12px rgba(0, 0, 0, 0.8));
     }
   </style>
 </head>
 <body>
 
-  <div class="card">
-    <div class="pokemon-container">
-      
-      <!-- Gliscor -->
-      <div class="pokemon-card">
-        <h2 class="pokemon-name">Gliscor</h2>
-        <img class="pokemon-animated" src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/472.gif" alt="Gliscor">
-      </div>
+  <h1>MY POKÉMON TEAM</h1>
 
-      <!-- Gengar -->
-      <div class="pokemon-card">
-        <h2 class="pokemon-name">Gengar</h2>
-        <img class="pokemon-animated" src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/94.gif" alt="Gengar">
-      </div>
+  <div class="grid-container">
 
+    <!-- 1. Gliscor -->
+    <div class="pokemon-card">
+      <h2 class="pokemon-name">Gliscor</h2>
+      <div class="types-container">
+        <span class="type-badge ground">Tierra</span>
+        <span class="type-badge flying">Volador</span>
+      </div>
+      <img class="pokemon-animated" src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/472.gif" alt="Gliscor">
     </div>
+
+    <!-- 2. Gengar -->
+    <div class="pokemon-card">
+      <h2 class="pokemon-name">Gengar</h2>
+      <div class="types-container">
+        <span class="type-badge ghost">Fantasma</span>
+        <span class="type-badge poison">Veneno</span>
+      </div>
+      <img class="pokemon-animated" src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/94.gif" alt="Gengar">
+    </div>
+
+    <!-- 3. Darkrai -->
+    <div class="pokemon-card">
+      <h2 class="pokemon-name">Darkrai</h2>
+      <div class="types-container">
+        <span class="type-badge dark">Siniestro</span>
+      </div>
+      <img class="pokemon-animated" src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/491.gif" alt="Darkrai">
+    </div>
+
+    <!-- 4. Glalie -->
+    <div class="pokemon-card">
+      <h2 class="pokemon-name">Glalie</h2>
+      <div class="types-container">
+        <span class="type-badge ice">Hielo</span>
+      </div>
+      <img class="pokemon-animated" src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/362.gif" alt="Glalie">
+    </div>
+
+    <!-- 5. Metagross -->
+    <div class="pokemon-card">
+      <h2 class="pokemon-name">Metagross</h2>
+      <div class="types-container">
+        <span class="type-badge steel">Acero</span>
+        <span class="type-badge psychic">Psíquico</span>
+      </div>
+      <img class="pokemon-animated" src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/376.gif" alt="Metagross">
+    </div>
+
+    <!-- 6. Mimikyu -->
+    <div class="pokemon-card">
+      <h2 class="pokemon-name">Mimikyu</h2>
+      <div class="types-container">
+        <span class="type-badge ghost">Fantasma</span>
+        <span class="type-badge fairy">Hada</span>
+      </div>
+      <img class="pokemon-animated" src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/778.gif" alt="Mimikyu">
+    </div>
+
   </div>
 
 </body>
