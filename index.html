@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>91Adrian91 | Gliscor</title>
+  <title>91Adrian91 | Pokémon Team</title>
   <style>
     body {
       margin: 0;
@@ -30,27 +30,39 @@
       padding: 35px;
       text-align: center;
       box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7);
-      max-width: 500px;
+      max-width: 750px;
       width: 90%;
     }
 
-    h1 {
+    /* Layout en fila para colocar a los Pokémon lado a lado */
+    .pokemon-container {
+      display: flex;
+      justify-content: center;
+      align-items: flex-end;
+      gap: 40px;
+      flex-wrap: wrap;
+      margin-top: 10px;
+    }
+
+    .pokemon-card {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .pokemon-name {
       margin: 0 0 15px 0;
-      font-size: 2.5rem;
+      font-size: 2rem;
       letter-spacing: 2px;
       color: #e0e0ff;
       text-shadow: 0 0 12px rgba(180, 140, 255, 0.6);
     }
 
-    /* Contenedor del GIF */
-    .gliscor-container {
-      margin: 20px 0;
-    }
-
-    /* Imagen animada con renderizado nítido de alta calidad */
-    .gliscor-animated {
-      width: 220px;
-      height: auto;
+    /* Estilos de las imágenes animadas */
+    .pokemon-animated {
+      height: 180px;
+      width: auto;
+      object-fit: contain;
       image-rendering: -webkit-optimize-contrast;
       image-rendering: crisp-edges;
       image-rendering: pixelated;
@@ -61,11 +73,20 @@
 <body>
 
   <div class="card">
-    <h1>Gliscor</h1>
+    <div class="pokemon-container">
+      
+      <!-- Gliscor -->
+      <div class="pokemon-card">
+        <h2 class="pokemon-name">Gliscor</h2>
+        <img class="pokemon-animated" src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/472.gif" alt="Gliscor">
+      </div>
 
-    <div class="gliscor-container">
-      <!-- GIF oficial animado en máxima resolución -->
-      <img class="gliscor-animated" src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/472.gif" alt="Gliscor">
+      <!-- Gengar -->
+      <div class="pokemon-card">
+        <h2 class="pokemon-name">Gengar</h2>
+        <img class="pokemon-animated" src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/94.gif" alt="Gengar">
+      </div>
+
     </div>
   </div>
 
