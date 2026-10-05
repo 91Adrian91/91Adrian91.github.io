@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>91Adrian91 | Pokémon Team</title>
+  <title>91Adrian91 | Trainer Card</title>
   <style>
     body {
       margin: 0;
@@ -11,79 +11,106 @@
       min-height: 100vh;
       display: flex;
       flex-direction: column;
-      justify-content: center;
+      justify-content: flex-start;
       align-items: center;
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       color: #ffffff;
-      background: linear-gradient(rgba(0, 0, 0, 0.65), rgba(0, 0, 0, 0.65)), 
+      background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), 
                   url('https://images.unsplash.com/photo-1506703719100-a0f3a48c0f86?q=80&w=1920&auto=format&fit=crop');
       background-size: cover;
       background-position: center;
       background-attachment: fixed;
     }
 
-    h1 {
-      margin-bottom: 30px;
-      font-size: 2.5rem;
-      letter-spacing: 2px;
-      color: #e0e0ff;
-      text-shadow: 0 0 12px rgba(180, 140, 255, 0.6);
+    /* Cabecera / Perfil */
+    .header-profile {
       text-align: center;
+      margin-bottom: 25px;
     }
 
-    /* Grid para colocar los bloques */
+    h1 {
+      margin: 0;
+      font-size: 2.8rem;
+      letter-spacing: 2px;
+      color: #e0e0ff;
+      text-shadow: 0 0 15px rgba(180, 140, 255, 0.6);
+    }
+
+    .trainer-subtitle {
+      color: #a0a0d0;
+      font-size: 0.95rem;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      margin-top: 5px;
+    }
+
+    /* Botón Shiny */
+    .shiny-btn {
+      background: linear-gradient(135deg, #ffd700, #ff8c00);
+      border: none;
+      color: #000;
+      font-weight: bold;
+      padding: 10px 20px;
+      border-radius: 20px;
+      cursor: pointer;
+      font-size: 0.9rem;
+      margin-top: 15px;
+      box-shadow: 0 0 15px rgba(255, 215, 0, 0.4);
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .shiny-btn:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 25px rgba(255, 215, 0, 0.7);
+    }
+
+    /* Grid */
     .grid-container {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
       gap: 25px;
-      max-width: 900px;
+      max-width: 950px;
       width: 100%;
     }
 
-    /* Tarjetas interactivas con cursor tipo botón */
+    /* Tarjeta Pokémon */
     .pokemon-card {
-      background: rgba(20, 20, 35, 0.75);
-      backdrop-filter: blur(10px);
+      background: rgba(20, 20, 35, 0.8);
+      backdrop-filter: blur(12px);
       border: 1px solid rgba(255, 255, 255, 0.15);
       border-radius: 20px;
-      padding: 25px 15px;
+      padding: 25px 20px;
       display: flex;
       flex-direction: column;
       align-items: center;
       box-shadow: 0 10px 25px rgba(0, 0, 0, 0.7);
       cursor: pointer;
-      user-select: none;
-      transition: transform 0.2s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+      position: relative;
+      transition: transform 0.3s ease, border-color 0.3s ease;
     }
 
     .pokemon-card:hover {
       transform: translateY(-8px);
       border-color: rgba(180, 140, 255, 0.5);
-      box-shadow: 0 12px 30px rgba(180, 140, 255, 0.25);
     }
 
-    /* Animación de ataque/sacudida al hacer clic */
     .pokemon-card.attack {
       animation: attackAnim 0.5s ease-in-out;
     }
 
     @keyframes attackAnim {
       0% { transform: scale(1); }
-      20% { transform: scale(1.1) translateY(-10px) rotate(-3deg); }
-      40% { transform: scale(1.1) translateY(-10px) rotate(3deg); }
-      60% { transform: scale(1.05) translateY(-5px) rotate(-1deg); }
+      30% { transform: scale(1.1) translateY(-10px); }
       100% { transform: scale(1); }
     }
 
     .pokemon-name {
       margin: 0 0 10px 0;
-      font-size: 1.5rem;
-      letter-spacing: 1px;
+      font-size: 1.6rem;
       color: #ffffff;
-      text-shadow: 0 0 8px rgba(255, 255, 255, 0.3);
     }
 
-    /* Tipos Pokémon */
+    /* Badges de Tipos */
     .types-container {
       display: flex;
       gap: 8px;
@@ -96,8 +123,6 @@
       font-size: 0.75rem;
       font-weight: bold;
       text-transform: uppercase;
-      letter-spacing: 1px;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.5);
     }
 
     .ground { background-color: #E0C068; color: #000; }
@@ -110,95 +135,175 @@
     .psychic{ background-color: #F85888; color: #fff; }
     .fairy  { background-color: #EE99AC; color: #000; }
 
-    /* Sprite GIF */
     .pokemon-animated {
       height: 120px;
       width: auto;
       object-fit: contain;
-      image-rendering: -webkit-optimize-contrast;
-      image-rendering: crisp-edges;
       image-rendering: pixelated;
       filter: drop-shadow(0 8px 12px rgba(0, 0, 0, 0.8));
+      margin-bottom: 15px;
+    }
+
+    /* Mini Barra de Stats */
+    .stats-container {
+      width: 100%;
+      margin-top: 10px;
+      font-size: 0.75rem;
+      color: #aaa;
+    }
+
+    .stat-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 4px;
+    }
+
+    .stat-bar-bg {
+      flex-grow: 1;
+      height: 6px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 3px;
+      overflow: hidden;
+    }
+
+    .stat-bar-fill {
+      height: 100%;
+      background: #c8b6ff;
+      border-radius: 3px;
     }
   </style>
 </head>
 <body>
 
-  <h1>MY POKÉMON TEAM</h1>
+  <div class="header-profile">
+    <h1>91Adrian91</h1>
+    <div class="trainer-subtitle">Master Pokémon Team</div>
+    <button class="shiny-btn" onclick="toggleShiny()">✨ Modo Shiny / Variocolor</button>
+  </div>
 
   <div class="grid-container">
 
-    <!-- Gliscor (ID 472) -->
+    <!-- Gliscor -->
     <div class="pokemon-card" onclick="playCry(472, this)">
       <h2 class="pokemon-name">Gliscor</h2>
       <div class="types-container">
         <span class="type-badge ground">Tierra</span>
         <span class="type-badge flying">Volador</span>
       </div>
-      <img class="pokemon-animated" src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/472.gif" alt="Gliscor">
+      <img class="pokemon-animated" id="poke-472" src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/472.gif" alt="Gliscor">
+      
+      <div class="stats-container">
+        <div class="stat-row"><span>HP</span><div class="stat-bar-bg"><div class="stat-bar-fill" style="width: 75%;"></div></div></div>
+        <div class="stat-row"><span>ATK</span><div class="stat-bar-bg"><div class="stat-bar-fill" style="width: 85%;"></div></div></div>
+        <div class="stat-row"><span>DEF</span><div class="stat-bar-bg"><div class="stat-bar-fill" style="width: 95%;"></div></div></div>
+      </div>
     </div>
 
-    <!-- Gengar (ID 94) -->
+    <!-- Gengar -->
     <div class="pokemon-card" onclick="playCry(94, this)">
       <h2 class="pokemon-name">Gengar</h2>
       <div class="types-container">
         <span class="type-badge ghost">Fantasma</span>
         <span class="type-badge poison">Veneno</span>
       </div>
-      <img class="pokemon-animated" src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/94.gif" alt="Gengar">
+      <img class="pokemon-animated" id="poke-94" src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/94.gif" alt="Gengar">
+      
+      <div class="stats-container">
+        <div class="stat-row"><span>HP</span><div class="stat-bar-bg"><div class="stat-bar-fill" style="width: 60%;"></div></div></div>
+        <div class="stat-row"><span>ATK</span><div class="stat-bar-bg"><div class="stat-bar-fill" style="width: 90%;"></div></div></div>
+        <div class="stat-row"><span>SPD</span><div class="stat-bar-bg"><div class="stat-bar-fill" style="width: 88%;"></div></div></div>
+      </div>
     </div>
 
-    <!-- Darkrai (ID 491) -->
+    <!-- Darkrai -->
     <div class="pokemon-card" onclick="playCry(491, this)">
       <h2 class="pokemon-name">Darkrai</h2>
       <div class="types-container">
         <span class="type-badge dark">Siniestro</span>
       </div>
-      <img class="pokemon-animated" src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/491.gif" alt="Darkrai">
+      <img class="pokemon-animated" id="poke-491" src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/491.gif" alt="Darkrai">
+      
+      <div class="stats-container">
+        <div class="stat-row"><span>HP</span><div class="stat-bar-bg"><div class="stat-bar-fill" style="width: 70%;"></div></div></div>
+        <div class="stat-row"><span>ATK</span><div class="stat-bar-bg"><div class="stat-bar-fill" style="width: 95%;"></div></div></div>
+        <div class="stat-row"><span>SPD</span><div class="stat-bar-bg"><div class="stat-bar-fill" style="width: 92%;"></div></div></div>
+      </div>
     </div>
 
-    <!-- Glalie (ID 362) -->
+    <!-- Glalie -->
     <div class="pokemon-card" onclick="playCry(362, this)">
       <h2 class="pokemon-name">Glalie</h2>
       <div class="types-container">
         <span class="type-badge ice">Hielo</span>
       </div>
-      <img class="pokemon-animated" src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/362.gif" alt="Glalie">
+      <img class="pokemon-animated" id="poke-362" src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/362.gif" alt="Glalie">
+      
+      <div class="stats-container">
+        <div class="stat-row"><span>HP</span><div class="stat-bar-bg"><div class="stat-bar-fill" style="width: 80%;"></div></div></div>
+        <div class="stat-row"><span>DEF</span><div class="stat-bar-bg"><div class="stat-bar-fill" style="width: 80%;"></div></div></div>
+        <div class="stat-row"><span>SPD</span><div class="stat-bar-bg"><div class="stat-bar-fill" style="width: 80%;"></div></div></div>
+      </div>
     </div>
 
-    <!-- Metagross (ID 376) -->
+    <!-- Metagross -->
     <div class="pokemon-card" onclick="playCry(376, this)">
       <h2 class="pokemon-name">Metagross</h2>
       <div class="types-container">
         <span class="type-badge steel">Acero</span>
         <span class="type-badge psychic">Psíquico</span>
       </div>
-      <img class="pokemon-animated" src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/376.gif" alt="Metagross">
+      <img class="pokemon-animated" id="poke-376" src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/376.gif" alt="Metagross">
+      
+      <div class="stats-container">
+        <div class="stat-row"><span>HP</span><div class="stat-bar-bg"><div class="stat-bar-fill" style="width: 80%;"></div></div></div>
+        <div class="stat-row"><span>ATK</span><div class="stat-bar-bg"><div class="stat-bar-fill" style="width: 95%;"></div></div></div>
+        <div class="stat-row"><span>DEF</span><div class="stat-bar-bg"><div class="stat-bar-fill" style="width: 90%;"></div></div></div>
+      </div>
     </div>
 
-    <!-- Mimikyu (ID 778) -->
+    <!-- Mimikyu -->
     <div class="pokemon-card" onclick="playCry(778, this)">
       <h2 class="pokemon-name">Mimikyu</h2>
       <div class="types-container">
         <span class="type-badge ghost">Fantasma</span>
         <span class="type-badge fairy">Hada</span>
       </div>
-      <img class="pokemon-animated" src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/778.gif" alt="Mimikyu">
+      <img class="pokemon-animated" id="poke-778" src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/778.gif" alt="Mimikyu">
+      
+      <div class="stats-container">
+        <div class="stat-row"><span>HP</span><div class="stat-bar-bg"><div class="stat-bar-fill" style="width: 55%;"></div></div></div>
+        <div class="stat-row"><span>ATK</span><div class="stat-bar-bg"><div class="stat-bar-fill" style="width: 80%;"></div></div></div>
+        <div class="stat-row"><span>SPD</span><div class="stat-bar-bg"><div class="stat-bar-fill" style="width: 85%;"></div></div></div>
+      </div>
     </div>
 
   </div>
 
   <script>
+    let isShiny = false;
+    const teamIds = [472, 94, 491, 362, 376, 778];
+
+    // Reproducción de sonido y animación
     function playCry(id, cardElement) {
-      // Reproduce el grito original de PokeAPI
       const audio = new Audio(`https://raw.githubusercontent.com/PokeAPI/cries/main/cries/pokemon/latest/${id}.ogg`);
       audio.volume = 0.5;
       audio.play();
 
-      // Efecto visual de movimiento al hacer clic
       cardElement.classList.remove('attack');
-      void cardElement.offsetWidth; // Reinicia la animación
+      void cardElement.offsetWidth;
       cardElement.classList.add('attack');
+    }
+
+    // Cambiar entre Normal y Shiny
+    function toggleShiny() {
+      isShiny = !isShiny;
+      const path = isShiny ? 'shiny' : 'showdown';
+
+      teamIds.forEach(id => {
+        const img = document.getElementById(`poke-${id}`);
+        img.src = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/${isShiny ? 'shiny/' : ''}${id}.gif`;
+      });
     }
   </script>
 
