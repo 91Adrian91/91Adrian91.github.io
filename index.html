@@ -7,11 +7,10 @@
   <style>
     body {
       margin: 0;
-      padding: 40px 20px;
+      padding: 30px 20px;
       min-height: 100vh;
       display: flex;
       flex-direction: column;
-      justify-content: flex-start;
       align-items: center;
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       color: #ffffff;
@@ -22,260 +21,101 @@
       background-attachment: fixed;
     }
 
-    /* Cabecera y Controles */
-    .header-profile {
-      text-align: center;
+    /* Menú de Navegación superior */
+    .nav-bar {
+      display: flex;
+      gap: 12px;
+      background: rgba(15, 15, 30, 0.85);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      padding: 10px 20px;
+      border-radius: 30px;
       margin-bottom: 25px;
     }
 
-    h1 {
-      margin: 0;
-      font-size: 2.8rem;
-      letter-spacing: 2px;
-      color: #e0e0ff;
-      text-shadow: 0 0 15px rgba(180, 140, 255, 0.6);
-    }
-
-    .trainer-subtitle {
+    .nav-link {
       color: #a0a0d0;
-      font-size: 0.95rem;
-      letter-spacing: 3px;
-      text-transform: uppercase;
-      margin-top: 5px;
+      text-decoration: none;
+      font-weight: bold;
+      padding: 8px 16px;
+      border-radius: 18px;
+      transition: 0.3s;
     }
 
-    .controls-bar {
-      display: flex;
-      gap: 12px;
-      justify-content: center;
-      margin-top: 15px;
-      flex-wrap: wrap;
-    }
+    .nav-link:hover { color: #fff; background: rgba(255,255,255,0.1); }
+    .nav-link.active { color: #000; background: linear-gradient(135deg, #ffd700, #ff8c00); }
 
+    .header-profile { text-align: center; margin-bottom: 25px; }
+    h1 { margin: 0; font-size: 2.8rem; letter-spacing: 2px; color: #e0e0ff; text-shadow: 0 0 15px rgba(180, 140, 255, 0.6); }
+    .trainer-subtitle { color: #a0a0d0; font-size: 0.95rem; letter-spacing: 3px; text-transform: uppercase; margin-top: 5px; }
+
+    .controls-bar { display: flex; gap: 12px; justify-content: center; margin-top: 15px; }
     .btn-action {
       background: linear-gradient(135deg, #ffd700, #ff8c00);
-      border: none;
-      color: #000;
-      font-weight: bold;
-      padding: 10px 18px;
-      border-radius: 20px;
-      cursor: pointer;
-      font-size: 0.85rem;
-      box-shadow: 0 0 15px rgba(255, 215, 0, 0.3);
-      transition: transform 0.2s, box-shadow 0.2s;
+      border: none; color: #000; font-weight: bold; padding: 10px 18px; border-radius: 20px; cursor: pointer; transition: 0.2s;
     }
+    .btn-action:hover { transform: scale(1.05); }
 
-    .btn-action:hover {
-      transform: scale(1.05);
-      box-shadow: 0 0 22px rgba(255, 215, 0, 0.6);
-    }
-
-    .btn-music {
-      background: linear-gradient(135deg, #a040a0, #705898);
-      color: #fff;
-      box-shadow: 0 0 15px rgba(160, 64, 160, 0.4);
-    }
-
-    /* Grid principal */
+    /* Grid */
     .grid-container {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-      gap: 25px;
-      max-width: 980px;
-      width: 100%;
+      gap: 25px; max-width: 980px; width: 100%;
     }
 
-    /* Contenedor Flip 3D */
-    .card-wrapper {
-      perspective: 1000px;
-      height: 420px;
-    }
-
-    .pokemon-card {
-      width: 100%;
-      height: 100%;
-      position: relative;
-      transform-style: preserve-3d;
-      transition: transform 0.6s cubic-bezier(0.4, 0.2, 0.2, 1);
-    }
-
-    .card-wrapper.flipped .pokemon-card {
-      transform: rotateY(180deg);
-    }
+    .card-wrapper { perspective: 1000px; height: 420px; }
+    .pokemon-card { width: 100%; height: 100%; position: relative; transform-style: preserve-3d; transition: transform 0.6s; }
+    .card-wrapper.flipped .pokemon-card { transform: rotateY(180deg); }
 
     .card-front, .card-back {
-      position: absolute;
-      width: 100%;
-      height: 100%;
-      backface-visibility: hidden;
-      border-radius: 20px;
-      background: rgba(20, 20, 35, 0.85);
-      backdrop-filter: blur(12px);
-      border: 1px solid rgba(255, 255, 255, 0.15);
-      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.7);
-      box-sizing: border-box;
-      padding: 20px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
+      position: absolute; width: 100%; height: 100%; backface-visibility: hidden; border-radius: 20px;
+      background: rgba(20, 20, 35, 0.85); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.15);
+      padding: 20px; box-sizing: border-box; display: flex; flex-direction: column; align-items: center;
     }
 
-    .card-back {
-      transform: rotateY(180deg);
-      justify-content: space-between;
-      text-align: left;
-    }
+    .card-back { transform: rotateY(180deg); justify-content: space-between; text-align: left; }
+    .pokemon-name { margin: 0 0 8px 0; font-size: 1.5rem; }
+    
+    .types-container { display: flex; gap: 6px; margin-bottom: 10px; }
+    .type-badge { padding: 3px 8px; border-radius: 10px; font-size: 0.7rem; font-weight: bold; text-transform: uppercase; }
+    .ground { background: #E0C068; color: #000; } .flying { background: #A98FF3; color: #000; }
+    .ghost  { background: #705898; color: #fff; } .poison { background: #A040A0; color: #fff; }
+    .dark   { background: #705848; color: #fff; } .ice    { background: #98D8D8; color: #000; }
+    .steel  { background: #B8B8D0; color: #000; } .psychic{ background: #F85888; color: #fff; }
+    .fairy  { background: #EE99AC; color: #000; }
 
-    /* Animación de ataque */
-    .card-wrapper.attack .card-front {
-      animation: attackAnim 0.5s ease-in-out;
-    }
+    .pokemon-animated { height: 110px; object-fit: contain; margin-bottom: 10px; }
+    
+    .stats-container { width: 100%; font-size: 0.7rem; font-weight: 600; }
+    .stat-row { display: flex; align-items: center; gap: 8px; margin-bottom: 5px; }
+    .stat-label { width: 30px; color: #a0a0c0; }
+    .stat-bar-bg { flex-grow: 1; height: 6px; background: rgba(255,255,255,0.1); border-radius: 4px; overflow: hidden; }
+    .stat-bar-fill { height: 100%; }
+    .hp { background: #4CAF50; } .atk { background: #FF5722; } .def { background: #2196F3; } .spd { background: #FFEB3B; }
 
-    @keyframes attackAnim {
-      0% { transform: scale(1); }
-      30% { transform: scale(1.08) translateY(-10px); filter: brightness(1.3); }
-      100% { transform: scale(1); }
-    }
+    .btn-flip { margin-top: auto; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); color: #ccc; padding: 5px 12px; border-radius: 12px; cursor: pointer; }
+    .btn-flip:hover { background: rgba(255,255,255,0.25); color: #fff; }
 
-    .pokemon-name {
-      margin: 0 0 8px 0;
-      font-size: 1.5rem;
-      color: #ffffff;
-    }
-
-    /* Badges de Tipos */
-    .types-container {
-      display: flex;
-      gap: 6px;
-      margin-bottom: 10px;
-    }
-
-    .type-badge {
-      padding: 3px 8px;
-      border-radius: 10px;
-      font-size: 0.7rem;
-      font-weight: bold;
-      text-transform: uppercase;
-    }
-
-    .ground { background-color: #E0C068; color: #000; }
-    .flying { background-color: #A98FF3; color: #000; }
-    .ghost  { background-color: #705898; color: #fff; }
-    .poison { background-color: #A040A0; color: #fff; }
-    .dark   { background-color: #705848; color: #fff; }
-    .ice    { background-color: #98D8D8; color: #000; }
-    .steel  { background-color: #B8B8D0; color: #000; }
-    .psychic{ background-color: #F85888; color: #fff; }
-    .fairy  { background-color: #EE99AC; color: #000; }
-
-    .pokemon-animated {
-      height: 110px;
-      width: auto;
-      object-fit: contain;
-      image-rendering: pixelated;
-      filter: drop-shadow(0 8px 12px rgba(0, 0, 0, 0.8));
-      margin-bottom: 10px;
-    }
-
-    /* Stats */
-    .stats-container {
-      width: 100%;
-      font-size: 0.7rem;
-      font-weight: 600;
-    }
-
-    .stat-row {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      margin-bottom: 5px;
-    }
-
-    .stat-label {
-      width: 30px;
-      color: #a0a0c0;
-    }
-
-    .stat-bar-bg {
-      flex-grow: 1;
-      height: 6px;
-      background: rgba(255, 255, 255, 0.08);
-      border-radius: 4px;
-      overflow: hidden;
-    }
-
-    .stat-bar-fill {
-      height: 100%;
-      border-radius: 4px;
-    }
-
-    .hp  { background: #4CAF50; box-shadow: 0 0 6px rgba(76, 175, 80, 0.6); }
-    .atk { background: #FF5722; box-shadow: 0 0 6px rgba(255, 87, 34, 0.6); }
-    .def { background: #2196F3; box-shadow: 0 0 6px rgba(33, 150, 243, 0.6); }
-    .spd { background: #FFEB3B; box-shadow: 0 0 6px rgba(255, 235, 59, 0.6); }
-
-    .btn-flip {
-      margin-top: auto;
-      background: rgba(255, 255, 255, 0.1);
-      border: 1px solid rgba(255, 255, 255, 0.2);
-      color: #ccc;
-      padding: 5px 12px;
-      border-radius: 12px;
-      cursor: pointer;
-      font-size: 0.75rem;
-      transition: background 0.2s;
-    }
-
-    .btn-flip:hover {
-      background: rgba(255, 255, 255, 0.25);
-      color: #fff;
-    }
-
-    /* Diseño del Reverso */
-    .back-title {
-      font-size: 1.1rem;
-      color: #c8b6ff;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-      width: 100%;
-      padding-bottom: 5px;
-      margin-bottom: 10px;
-    }
-
-    .info-section {
-      width: 100%;
-      font-size: 0.8rem;
-    }
-
-    .info-section strong {
-      color: #ffd700;
-    }
-
-    .moves-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 6px;
-      width: 100%;
-      margin-top: 8px;
-    }
-
-    .move-item {
-      background: rgba(255, 255, 255, 0.05);
-      padding: 5px 8px;
-      border-radius: 8px;
-      font-size: 0.72rem;
-      text-align: center;
-      border: 1px solid rgba(255, 255, 255, 0.08);
-    }
+    .back-title { font-size: 1.1rem; color: #c8b6ff; border-bottom: 1px solid rgba(255,255,255,0.1); width: 100%; padding-bottom: 5px; }
+    .info-section { width: 100%; font-size: 0.8rem; }
+    .info-section strong { color: #ffd700; }
+    .moves-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; width: 100%; }
+    .move-item { background: rgba(255,255,255,0.05); padding: 5px; border-radius: 8px; font-size: 0.72rem; text-align: center; }
   </style>
 </head>
 <body>
+
+  <!-- Navegación -->
+  <nav class="nav-bar">
+    <a href="index.html" class="nav-link active">⚔️ Mi Equipo</a>
+    <a href="minijuego.html" class="nav-link">🎮 Minijuego</a>
+  </nav>
 
   <div class="header-profile">
     <h1>91Adrian91</h1>
     <div class="trainer-subtitle">Master Pokémon Team</div>
     <div class="controls-bar">
       <button class="btn-action" onclick="toggleShiny()">✨ Modo Shiny</button>
-      <button class="btn-action btn-music" id="bgmBtn" onclick="toggleMusic()">🎵 Música: OFF</button>
     </div>
   </div>
 
@@ -284,12 +124,9 @@
     <!-- Gliscor -->
     <div class="card-wrapper" id="card-472">
       <div class="pokemon-card">
-        <div class="card-front" onclick="playCry(472, 'card-472')">
+        <div class="card-front" onclick="playCry(472)">
           <h2 class="pokemon-name">Gliscor</h2>
-          <div class="types-container">
-            <span class="type-badge ground">Tierra</span>
-            <span class="type-badge flying">Volador</span>
-          </div>
+          <div class="types-container"><span class="type-badge ground">Tierra</span><span class="type-badge flying">Volador</span></div>
           <img class="pokemon-animated" id="poke-472" src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/472.gif" alt="Gliscor">
           <div class="stats-container">
             <div class="stat-row"><span class="stat-label">HP</span><div class="stat-bar-bg"><div class="stat-bar-fill hp" style="width: 75%;"></div></div></div>
@@ -307,10 +144,8 @@
             <p><strong>Debilidades:</strong> Hielo (x4), Agua</p>
           </div>
           <div class="moves-grid">
-            <div class="move-item">Earthquake</div>
-            <div class="move-item">Toxic</div>
-            <div class="move-item">Protect</div>
-            <div class="move-item">Roost</div>
+            <div class="move-item">Earthquake</div><div class="move-item">Toxic</div>
+            <div class="move-item">Protect</div><div class="move-item">Roost</div>
           </div>
           <button class="btn-flip" onclick="toggleFlip('card-472')">↩️ Volver</button>
         </div>
@@ -320,12 +155,9 @@
     <!-- Gengar -->
     <div class="card-wrapper" id="card-94">
       <div class="pokemon-card">
-        <div class="card-front" onclick="playCry(94, 'card-94')">
+        <div class="card-front" onclick="playCry(94)">
           <h2 class="pokemon-name">Gengar</h2>
-          <div class="types-container">
-            <span class="type-badge ghost">Fantasma</span>
-            <span class="type-badge poison">Veneno</span>
-          </div>
+          <div class="types-container"><span class="type-badge ghost">Fantasma</span><span class="type-badge poison">Veneno</span></div>
           <img class="pokemon-animated" id="poke-94" src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/94.gif" alt="Gengar">
           <div class="stats-container">
             <div class="stat-row"><span class="stat-label">HP</span><div class="stat-bar-bg"><div class="stat-bar-fill hp" style="width: 60%;"></div></div></div>
@@ -343,10 +175,8 @@
             <p><strong>Debilidades:</strong> Siniestro, Fantasma, Psíquico</p>
           </div>
           <div class="moves-grid">
-            <div class="move-item">Shadow Ball</div>
-            <div class="move-item">Sludge Bomb</div>
-            <div class="move-item">Focus Blast</div>
-            <div class="move-item">Will-O-Wisp</div>
+            <div class="move-item">Shadow Ball</div><div class="move-item">Sludge Bomb</div>
+            <div class="move-item">Focus Blast</div><div class="move-item">Will-O-Wisp</div>
           </div>
           <button class="btn-flip" onclick="toggleFlip('card-94')">↩️ Volver</button>
         </div>
@@ -356,11 +186,9 @@
     <!-- Darkrai -->
     <div class="card-wrapper" id="card-491">
       <div class="pokemon-card">
-        <div class="card-front" onclick="playCry(491, 'card-491')">
+        <div class="card-front" onclick="playCry(491)">
           <h2 class="pokemon-name">Darkrai</h2>
-          <div class="types-container">
-            <span class="type-badge dark">Siniestro</span>
-          </div>
+          <div class="types-container"><span class="type-badge dark">Siniestro</span></div>
           <img class="pokemon-animated" id="poke-491" src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/491.gif" alt="Darkrai">
           <div class="stats-container">
             <div class="stat-row"><span class="stat-label">HP</span><div class="stat-bar-bg"><div class="stat-bar-fill hp" style="width: 70%;"></div></div></div>
@@ -378,10 +206,8 @@
             <p><strong>Debilidades:</strong> Lucha, Bicho, Hada</p>
           </div>
           <div class="moves-grid">
-            <div class="move-item">Dark Void</div>
-            <div class="move-item">Dark Pulse</div>
-            <div class="move-item">Nasty Plot</div>
-            <div class="move-item">Dream Eater</div>
+            <div class="move-item">Dark Void</div><div class="move-item">Dark Pulse</div>
+            <div class="move-item">Nasty Plot</div><div class="move-item">Dream Eater</div>
           </div>
           <button class="btn-flip" onclick="toggleFlip('card-491')">↩️ Volver</button>
         </div>
@@ -391,11 +217,9 @@
     <!-- Glalie -->
     <div class="card-wrapper" id="card-362">
       <div class="pokemon-card">
-        <div class="card-front" onclick="playCry(362, 'card-362')">
+        <div class="card-front" onclick="playCry(362)">
           <h2 class="pokemon-name">Glalie</h2>
-          <div class="types-container">
-            <span class="type-badge ice">Hielo</span>
-          </div>
+          <div class="types-container"><span class="type-badge ice">Hielo</span></div>
           <img class="pokemon-animated" id="poke-362" src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/362.gif" alt="Glalie">
           <div class="stats-container">
             <div class="stat-row"><span class="stat-label">HP</span><div class="stat-bar-bg"><div class="stat-bar-fill hp" style="width: 80%;"></div></div></div>
@@ -413,10 +237,8 @@
             <p><strong>Debilidades:</strong> Fuego, Lucha, Roca, Acero</p>
           </div>
           <div class="moves-grid">
-            <div class="move-item">Ice Beam</div>
-            <div class="move-item">Spikes</div>
-            <div class="move-item">Freeze-Dry</div>
-            <div class="move-item">Explosion</div>
+            <div class="move-item">Ice Beam</div><div class="move-item">Spikes</div>
+            <div class="move-item">Freeze-Dry</div><div class="move-item">Explosion</div>
           </div>
           <button class="btn-flip" onclick="toggleFlip('card-362')">↩️ Volver</button>
         </div>
@@ -426,12 +248,9 @@
     <!-- Metagross -->
     <div class="card-wrapper" id="card-376">
       <div class="pokemon-card">
-        <div class="card-front" onclick="playCry(376, 'card-376')">
+        <div class="card-front" onclick="playCry(376)">
           <h2 class="pokemon-name">Metagross</h2>
-          <div class="types-container">
-            <span class="type-badge steel">Acero</span>
-            <span class="type-badge psychic">Psíquico</span>
-          </div>
+          <div class="types-container"><span class="type-badge steel">Acero</span><span class="type-badge psychic">Psíquico</span></div>
           <img class="pokemon-animated" id="poke-376" src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/376.gif" alt="Metagross">
           <div class="stats-container">
             <div class="stat-row"><span class="stat-label">HP</span><div class="stat-bar-bg"><div class="stat-bar-fill hp" style="width: 80%;"></div></div></div>
@@ -449,10 +268,8 @@
             <p><strong>Debilidades:</strong> Fuego, Tierra, Siniestro, Fantasma</p>
           </div>
           <div class="moves-grid">
-            <div class="move-item">Meteor Mash</div>
-            <div class="move-item">Zen Headbutt</div>
-            <div class="move-item">Bullet Punch</div>
-            <div class="move-item">Earthquake</div>
+            <div class="move-item">Meteor Mash</div><div class="move-item">Zen Headbutt</div>
+            <div class="move-item">Bullet Punch</div><div class="move-item">Earthquake</div>
           </div>
           <button class="btn-flip" onclick="toggleFlip('card-376')">↩️ Volver</button>
         </div>
@@ -462,12 +279,9 @@
     <!-- Mimikyu -->
     <div class="card-wrapper" id="card-778">
       <div class="pokemon-card">
-        <div class="card-front" onclick="playCry(778, 'card-778')">
+        <div class="card-front" onclick="playCry(778)">
           <h2 class="pokemon-name">Mimikyu</h2>
-          <div class="types-container">
-            <span class="type-badge ghost">Fantasma</span>
-            <span class="type-badge fairy">Hada</span>
-          </div>
+          <div class="types-container"><span class="type-badge ghost">Fantasma</span><span class="type-badge fairy">Hada</span></div>
           <img class="pokemon-animated" id="poke-778" src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/778.gif" alt="Mimikyu">
           <div class="stats-container">
             <div class="stat-row"><span class="stat-label">HP</span><div class="stat-bar-bg"><div class="stat-bar-fill hp" style="width: 55%;"></div></div></div>
@@ -485,12 +299,10 @@
             <p><strong>Debilidades:</strong> Fantasma, Acero</p>
           </div>
           <div class="moves-grid">
-            <div class="move-item">Swords Dance</div>
-            <div class="move-item">Play Rough</div>
-            <div class="move-item">Shadow Sneak</div>
-            <div class="move-item">Drain Punch</div>
+            <div class="move-item">Swords Dance</div><div class="move-item">Play Rough</div>
+            <div class="move-item">Shadow Sneak</div><div class="move-item">Drain Punch</div>
           </div>
-          <button class="btn-flip" onclick="toggleFlip('card-778')">↩️️ Volver</button>
+          <button class="btn-flip" onclick="toggleFlip('card-778')">↩️ Volver</button>
         </div>
       </div>
     </div>
@@ -499,53 +311,24 @@
 
   <script>
     let isShiny = false;
-    let isPlayingMusic = false;
     const teamIds = [472, 94, 491, 362, 376, 778];
 
-    // Audio BGM de Combate
-    const bgmAudio = new Audio('https://play.pokemonshowdown.com/audio/bgm/bw-champion.mp3');
-    bgmAudio.loop = true;
-    bgmAudio.volume = 0.15;
-
-    function toggleMusic() {
-      const btn = document.getElementById('bgmBtn');
-      if (isPlayingMusic) {
-        bgmAudio.pause();
-        btn.textContent = "🎵 Música: OFF";
-      } else {
-        bgmAudio.play();
-        btn.textContent = "🎵 Música: ON";
-      }
-      isPlayingMusic = !isPlayingMusic;
-    }
-
-    // Reproducir grito oficial y animación
-    function playCry(id, wrapperId) {
+    function playCry(id) {
       const audio = new Audio(`https://raw.githubusercontent.com/PokeAPI/cries/main/cries/pokemon/latest/${id}.ogg`);
       audio.volume = 0.5;
       audio.play();
-
-      const wrapper = document.getElementById(wrapperId);
-      wrapper.classList.remove('attack');
-      void wrapper.offsetWidth;
-      wrapper.classList.add('attack');
     }
 
-    // Giro 3D de la tarjeta
     function toggleFlip(wrapperId) {
-      const wrapper = document.getElementById(wrapperId);
-      wrapper.classList.toggle('flipped');
+      document.getElementById(wrapperId).classList.toggle('flipped');
     }
 
-    // Toggle Shiny
     function toggleShiny() {
       isShiny = !isShiny;
       teamIds.forEach(id => {
-        const img = document.getElementById(`poke-${id}`);
-        img.src = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/${isShiny ? 'shiny/' : ''}${id}.gif`;
+        document.getElementById(`poke-${id}`).src = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/${isShiny ? 'shiny/' : ''}${id}.gif`;
       });
     }
   </script>
-
 </body>
 </html>
