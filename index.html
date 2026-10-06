@@ -39,8 +39,8 @@
 
     .poke-img-box { position: relative; width: 100%; height: 170px; display: flex; justify-content: center; align-items: center; margin: 10px 0; }
     .poke-img-box::before { content: ''; position: absolute; width: 130px; height: 130px; background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, rgba(0,0,0,0) 70%); border-radius: 50%; }
-    .poke-img { height: 150px; z-index: 2; filter: drop-shadow(0 10px 15px rgba(0,0,0,0.5)); transition: transform 0.3s; }
-    .card:hover .poke-img { transform: scale(1.1); }
+    .poke-img { height: 120px; z-index: 2; filter: drop-shadow(0 10px 15px rgba(0,0,0,0.5)); transition: transform 0.3s; image-rendering: pixelated; }
+    .card:hover .poke-img { transform: scale(1.15); }
 
     .types { display: flex; gap: 8px; justify-content: center; margin-bottom: 10px; }
     .type-badge { padding: 4px 12px; border-radius: 12px; font-size: 0.75rem; font-weight: bold; text-transform: uppercase; border: 1px solid rgba(255,255,255,0.2); }
@@ -67,12 +67,11 @@
     .type-ghost { background: #705898; } .type-poison { background: #A040A0; }
     .type-dark { background: #705848; } .type-electric { background: #F8D030; color: #000; }
     .type-dragon { background: #7038F8; } .type-steel { background: #B8B8D0; color: #000; }
-    .type-rock { background: #B8A038; }
+    .type-rock { background: #B8A038; } .type-bug { background: #A8B820; }
   </style>
 </head>
 <body>
 
-  <!-- BARRA DE NAVEGACIÓN ACTUALIZADA CON LOS 4 ENLACES -->
   <nav class="nav-bar">
     <a href="index.html" class="nav-link active">⚔️ Equipo</a>
     <a href="minijuego.html" class="nav-link">🎮 ¿Quién es?</a>
@@ -112,6 +111,10 @@
         const def = data.stats.find(s => s.stat.name === 'defense').base_stat;
         const spd = data.stats.find(s => s.stat.name === 'speed').base_stat;
 
+        // Sprites animados GIF de Showdown
+        const defaultGif = data.sprites.other.showdown.front_default || data.sprites.front_default;
+        const shinyGif = data.sprites.other.showdown.front_shiny || data.sprites.front_shiny;
+
         const typesHtml = data.types.map(t => `<span class="type-badge type-${t.type.name}">${t.type.name}</span>`).join('');
         const movesHtml = p.moves.map(m => `<div class="move-item"><span>${m}</span><span>⚔️</span></div>`).join('');
 
@@ -124,7 +127,7 @@
                   <span class="hp-badge">HP ${hp}</span>
                 </div>
                 <div class="poke-img-box">
-                  <img class="poke-img" id="img-${data.id}" src="${data.sprites.other['official-artwork'].front_default}" alt="${data.name}">
+                  <img class="poke-img" id="img-${data.id}" src="${defaultGif}" alt="${data.name}">
                 </div>
                 <div class="types">${typesHtml}</div>
               </div>
@@ -135,7 +138,7 @@
               </div>
               <div class="controls-bar" onclick="event.stopPropagation()">
                 <button class="btn-action" title="Grito Pokémon" onclick="playCry(${data.id})">🔊</button>
-                <button class="btn-action" id="shiny-btn-${data.id}" title="Versión Shiny" onclick="toggleShiny(${data.id}, '${data.sprites.other['official-artwork'].front_default}', '${data.sprites.other['official-artwork'].front_shiny}')">✨</button>
+                <button class="btn-action" id="shiny-btn-${data.id}" title="Versión Shiny" onclick="toggleShiny(${data.id}, '${defaultGif}', '${shinyGif}')">✨</button>
               </div>
             </div>
             <div class="card-face card-back">
