@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pokedle | 91Adrian91</title>
+  <style>
+    body {
+      margin: 0; padding: 30px 15px; min-height: 100vh;
+      display: flex; flex-direction: column; align-items: center;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; color: #fff;
+      background: linear-gradient(rgba(0,0,0,0.85), rgba(0,0,0,0.85)), 
+                  url('https://images.unsplash.com/photo-1506703719100-a0f3a48c0f86?q=80&w=1920&auto=format&fit=crop');
+      background-size: cover; background-attachment: fixed;
+    }
+    .nav-bar { display: flex; gap: 10px; background: rgba(15,15,30,0.85); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.15); padding: 10px 18px; border-radius: 30px; margin-bottom: 25px; flex-wrap: wrap; justify-content: center; }
+    .nav-link { color: #a0a0d0; text-decoration: none; font-weight: bold; padding: 8px 14px; border-radius: 18px; transition: 0.3s; font-size: 0.85rem; }
+    .nav-link:hover { color: #fff; background: rgba(255,255,255,0.1); }
+    .nav-link.active { color: #000; background: linear-gradient(135deg, #ffd700, #ff8c00); }
+
+    .game-card { background: rgba(20,20,35,0.85); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.15); border-radius: 20px; padding: 25px; max-width: 500px; width: 100%; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.7); }
+    .search-box { display: flex; gap: 8px; margin-bottom: 20px; }
+    input { flex: 1; padding: 12px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.2); background: rgba(0,0,0,0.4); color: #fff; font-size: 1rem; outline: none; }
+    button { background: linear-gradient(135deg, #ffd700, #ff8c00); border: none; padding: 12px 20px; border-radius: 12px; font-weight: bold; cursor: pointer; color: #000; }
+    
+    .attempts-list { display: flex; flex-direction: column; gap: 10px; width: 100%; }
+    .attempt-row { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; font-size: 0.75rem; font-weight: bold; }
+    .tile { padding: 10px 4px; border-radius: 8px; text-align: center; display: flex; flex-direction: column; align-items: center; justify-content: center; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); }
+    .correct { background: #4CAF50 !important; }
+    .wrong { background: #f44336 !important; }
+    .tile img { height: 35px; width: 35px; }
+  </style>
+</head>
+<body>
+
+  <nav class="nav-bar">
+    <a href="index.html" class="nav-link">⚔️ Equipo</a>
+    <a href="minijuego.html" class="nav-link">🎮 ¿Quién es?</a>
+    <a href="pokedle.html" class="nav-link active">🧩 Pokedle</a>
+    <a href="typematchup.html" class="nav-link">⚡ Type Matchup</a>
+  </nav>
+
+  <div class="game-card">
+    <h2>🧩 Pokedle (Gen 1)</h2>
+    <p style="color: #aaa; font-size: 0.85rem;">Adivina el Pokémon oculto escribiendo su nombre en inglés</p>
+    
+    <div class="search-box">
+      <input type="text" id="guessInput" placeholder="Ej: Pikachu, Gengar, Bulbasaur..." onkeypress="if(event.key==='Enter') makeGuess()">
+      <button onclick="makeGuess()">Adivinar</button>
+    </div>
+
+    <div class="attempts-list" id="attempts"></div>
+  </div>
+
+  <script>
+    let secretPokemon = null;
+
+    async function initGame() {
+      const randomId = Math.floor(Math.random() * 151) + 1;
+      secretPokemon = await getPokeData(randomId);
+    }
+
+    async function getPokeData(idOrName) {
+      try {
+        const res = await fetch(`https://pokeapi.co/api/v2/pokemon/${idOrName.toString().toLowerCase()}`);
+        if (!res.ok) return null;
+        const data = await res.json();
+        return {
+          id: data.id,
+          name: data.name,
+          sprite: data.sprites.front_default,
+          type1: data.types[0].type.name,
+          type2: data.types[1] ? data.types[1].type.name : 'Ninguno',
+          height: data.height / 10,
+          weight: data.weight / 10
+        };
+      } catch { return null; }
+    }
+
+    async function makeGuess() {
+      const input = document.getElementById('guessInput');
+      const val = input.value.trim();
+      if (!val) return;
+
+      const guess = await getPokeData(val);
+      if (!guess) { alert('Pokémon no encontrado o no pertenece a la Gen 1'); return; }
+
+      input.value = '';
+      const row = document.createElement('div');
+      row.className = 'attempt-row';
+
+      row.innerHTML = `
+        <div class="tile ${guess.name === secretPokemon.name ? 'correct' : 'wrong'}">
+          <img src="${guess.sprite}">
+          <span>${guess.name}</span>
+        </div>
+        <div class="tile ${guess.type1 === secretPokemon.type1 ? 'correct' : 'wrong'}">
+          <span>Tipo 1</span>
+          <span>${guess.type1}</span>
+        </div>
+        <div class="tile ${guess.type2 === secretPokemon.type2 ? 'correct' : 'wrong'}">
+          <span>Tipo 2</span>
+          <span>${guess.type2}</span>
+        </div>
+        <div class="tile ${guess.height === secretPokemon.height ? 'correct' : 'wrong'}">
+          <span>Alt.</span>
+          <span>${guess.height}m ${guess.height < secretPokemon.height ? '⬆️' : guess.height > secretPokemon.height ? '⬇️' : ''}</span>
+        </div>
+        <div class="tile ${guess.weight === secretPokemon.weight ? 'correct' : 'wrong'}">
+          <span>Peso</span>
+          <span>${guess.weight}kg ${guess.weight < secretPokemon.weight ? '⬆️' : guess.weight > secretPokemon.weight ? '⬇️' : ''}</span>
+        </div>
+      `;
+
+      document.getElementById('attempts').prepend(row);
+
+      if (guess.name === secretPokemon.name) {
+        setTimeout(() => alert('🎉 ¡Felicidades! Has adivinado el Pokémon.'), 100);
+      }
+    }
+
+    initGame();
+  </script>
+</body>
+</html>
