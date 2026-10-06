@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>¿Quién es este Pokémon? | 91Adrian91</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 30px 15px;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      color: #fff;
+      background: linear-gradient(rgba(0,0,0,0.8), rgba(0,0,0,0.8)), 
+                  url('https://images.unsplash.com/photo-1506703719100-a0f3a48c0f86?q=80&w=1920&auto=format&fit=crop');
+      background-size: cover;
+      background-attachment: fixed;
+    }
+
+    /* Menú de Navegación */
+    .nav-bar {
+      display: flex;
+      gap: 12px;
+      background: rgba(15, 15, 30, 0.85);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      padding: 10px 20px;
+      border-radius: 30px;
+      margin-bottom: 25px;
+    }
+
+    .nav-link {
+      color: #a0a0d0;
+      text-decoration: none;
+      font-weight: bold;
+      padding: 8px 16px;
+      border-radius: 18px;
+      transition: 0.3s;
+    }
+
+    .nav-link:hover { color: #fff; background: rgba(255,255,255,0.1); }
+    .nav-link.active { color: #000; background: linear-gradient(135deg, #ffd700, #ff8c00); }
+
+    /* Game Box */
+    .game-card {
+      background: rgba(20, 20, 35, 0.85);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 20px;
+      padding: 25px;
+      max-width: 420px;
+      width: 100%;
+      text-align: center;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.7);
+    }
+
+    .score-board {
+      display: flex;
+      justify-content: space-between;
+      color: #ffd700;
+      font-weight: bold;
+      margin-bottom: 15px;
+    }
+
+    .poke-img-container {
+      height: 180px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .poke-img {
+      height: 160px;
+      filter: brightness(0); /* Silueta */
+      transition: filter 0.5s ease;
+    }
+
+    .poke-img.revealed {
+      filter: brightness(1); /* Imagen Real */
+    }
+
+    .options-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .btn-opt {
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      color: #fff;
+      padding: 12px;
+      border-radius: 12px;
+      font-weight: bold;
+      cursor: pointer;
+      text-transform: capitalize;
+      transition: 0.2s;
+    }
+
+    .btn-opt:hover { background: rgba(255, 255, 255, 0.25); }
+    .btn-opt.correct { background: #4CAF50 !important; color: #fff; }
+    .btn-opt.wrong { background: #f44336 !important; color: #fff; }
+
+    .btn-next {
+      margin-top: 15px;
+      width: 100%;
+      background: linear-gradient(135deg, #ffd700, #ff8c00);
+      border: none;
+      color: #000;
+      padding: 12px;
+      border-radius: 12px;
+      font-weight: bold;
+      cursor: pointer;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+
+  <nav class="nav-bar">
+    <a href="index.html" class="nav-link">⚔️ Mi Equipo</a>
+    <a href="minijuego.html" class="nav-link active">🎮 Minijuego</a>
+  </nav>
+
+  <div class="game-card">
+    <h2>¿Quién es este Pokémon?</h2>
+    <div class="score-board">
+      <span>Puntos: <span id="score">0</span></span>
+      <span>Racha: <span id="streak">0</span> 🔥</span>
+    </div>
+
+    <div class="poke-img-container">
+      <img id="pokeImg" class="poke-img" src="" alt="Pokemon">
+    </div>
+
+    <div class="options-grid" id="optionsGrid"></div>
+    <button class="btn-next" id="nextBtn" onclick="loadGame()">Siguiente Pokémon ➔</button>
+  </div>
+
+  <script>
+    let correctPokemon = null;
+    let score = 0;
+    let streak = 0;
+
+    async function loadGame() {
+      document.getElementById('nextBtn').style.display = 'none';
+      const img = document.getElementById('pokeImg');
+      img.classList.remove('revealed');
+      img.src = '';
+
+      // Obtener 4 Pokémon aleatorios
+      const randomIds = Array.from({length: 4}, () => Math.floor(Math.random() * 151) + 1);
+      const pokemonData = await Promise.all(randomIds.map(id => fetch(`https://pokeapi.co/api/v2/pokemon/${id}`).then(r => r.json())));
+
+      correctPokemon = pokemonData[Math.floor(Math.random() * 4)];
+      img.src = correctPokemon.sprites.other['official-artwork'].front_default;
+
+      const grid = document.getElementById('optionsGrid');
+      grid.innerHTML = '';
+
+      pokemonData.forEach(p => {
+        const btn = document.createElement('button');
+        btn.className = 'btn-opt';
+        btn.textContent = p.name;
+        btn.onclick = () => checkAnswer(p.id, btn);
+        grid.appendChild(btn);
+      });
+    }
+
+    function checkAnswer(selectedId, btn) {
+      const img = document.getElementById('pokeImg');
+      img.classList.add('revealed');
+      
+      const buttons = document.querySelectorAll('.btn-opt');
+      buttons.forEach(b => b.disabled = true);
+
+      if (selectedId === correctPokemon.id) {
+        btn.classList.add('correct');
+        score += 10;
+        streak++;
+        new Audio(`https://raw.githubusercontent.com/PokeAPI/cries/main/cries/pokemon/latest/${correctPokemon.id}.ogg`).play();
+      } else {
+        btn.classList.add('wrong');
+        streak = 0;
+        buttons.forEach(b => {
+          if (b.textContent === correctPokemon.name) b.classList.add('correct');
+        });
+      }
+
+      document.getElementById('score').textContent = score;
+      document.getElementById('streak').textContent = streak;
+      document.getElementById('nextBtn').style.display = 'block';
+    }
+
+    loadGame();
+  </script>
+</body>
+</html>
