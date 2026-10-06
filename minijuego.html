@@ -6,124 +6,39 @@
   <title>¿Quién es este Pokémon? | 91Adrian91</title>
   <style>
     body {
-      margin: 0;
-      padding: 30px 15px;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      color: #fff;
+      margin: 0; padding: 30px 15px; min-height: 100vh;
+      display: flex; flex-direction: column; align-items: center;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; color: #fff;
       background: linear-gradient(rgba(0,0,0,0.8), rgba(0,0,0,0.8)), 
                   url('https://images.unsplash.com/photo-1506703719100-a0f3a48c0f86?q=80&w=1920&auto=format&fit=crop');
-      background-size: cover;
-      background-attachment: fixed;
+      background-size: cover; background-attachment: fixed;
     }
 
-    /* Menú de Navegación */
-    .nav-bar {
-      display: flex;
-      gap: 12px;
-      background: rgba(15, 15, 30, 0.85);
-      backdrop-filter: blur(10px);
-      border: 1px solid rgba(255, 255, 255, 0.15);
-      padding: 10px 20px;
-      border-radius: 30px;
-      margin-bottom: 25px;
-    }
-
-    .nav-link {
-      color: #a0a0d0;
-      text-decoration: none;
-      font-weight: bold;
-      padding: 8px 16px;
-      border-radius: 18px;
-      transition: 0.3s;
-    }
-
+    .nav-bar { display: flex; gap: 10px; background: rgba(15, 15, 30, 0.85); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.15); padding: 10px 18px; border-radius: 30px; margin-bottom: 25px; flex-wrap: wrap; justify-content: center; }
+    .nav-link { color: #a0a0d0; text-decoration: none; font-weight: bold; padding: 8px 14px; border-radius: 18px; transition: 0.3s; font-size: 0.85rem; }
     .nav-link:hover { color: #fff; background: rgba(255,255,255,0.1); }
     .nav-link.active { color: #000; background: linear-gradient(135deg, #ffd700, #ff8c00); }
 
-    /* Game Box */
-    .game-card {
-      background: rgba(20, 20, 35, 0.85);
-      backdrop-filter: blur(12px);
-      border: 1px solid rgba(255, 255, 255, 0.15);
-      border-radius: 20px;
-      padding: 25px;
-      max-width: 420px;
-      width: 100%;
-      text-align: center;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.7);
-    }
-
-    .score-board {
-      display: flex;
-      justify-content: space-between;
-      color: #ffd700;
-      font-weight: bold;
-      margin-bottom: 15px;
-    }
-
-    .poke-img-container {
-      height: 180px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      margin-bottom: 20px;
-    }
-
-    .poke-img {
-      height: 160px;
-      filter: brightness(0); /* Silueta */
-      transition: filter 0.5s ease;
-    }
-
-    .poke-img.revealed {
-      filter: brightness(1); /* Imagen Real */
-    }
-
-    .options-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 10px;
-    }
-
-    .btn-opt {
-      background: rgba(255, 255, 255, 0.1);
-      border: 1px solid rgba(255, 255, 255, 0.2);
-      color: #fff;
-      padding: 12px;
-      border-radius: 12px;
-      font-weight: bold;
-      cursor: pointer;
-      text-transform: capitalize;
-      transition: 0.2s;
-    }
-
+    .game-card { background: rgba(20, 20, 35, 0.85); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.15); border-radius: 20px; padding: 25px; max-width: 420px; width: 100%; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.7); }
+    .score-board { display: flex; justify-content: space-between; color: #ffd700; font-weight: bold; margin-bottom: 15px; }
+    .poke-img-container { height: 180px; display: flex; justify-content: center; align-items: center; margin-bottom: 20px; }
+    .poke-img { height: 160px; filter: brightness(0); transition: filter 0.5s ease; }
+    .poke-img.revealed { filter: brightness(1); }
+    .options-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .btn-opt { background: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255, 255, 255, 0.2); color: #fff; padding: 12px; border-radius: 12px; font-weight: bold; cursor: pointer; text-transform: capitalize; transition: 0.2s; }
     .btn-opt:hover { background: rgba(255, 255, 255, 0.25); }
     .btn-opt.correct { background: #4CAF50 !important; color: #fff; }
     .btn-opt.wrong { background: #f44336 !important; color: #fff; }
-
-    .btn-next {
-      margin-top: 15px;
-      width: 100%;
-      background: linear-gradient(135deg, #ffd700, #ff8c00);
-      border: none;
-      color: #000;
-      padding: 12px;
-      border-radius: 12px;
-      font-weight: bold;
-      cursor: pointer;
-      display: none;
-    }
+    .btn-next { margin-top: 15px; width: 100%; background: linear-gradient(135deg, #ffd700, #ff8c00); border: none; color: #000; padding: 12px; border-radius: 12px; font-weight: bold; cursor: pointer; display: none; }
   </style>
 </head>
 <body>
 
   <nav class="nav-bar">
-    <a href="index.html" class="nav-link">⚔️ Mi Equipo</a>
-    <a href="minijuego.html" class="nav-link active">🎮 Minijuego</a>
+    <a href="index.html" class="nav-link">⚔️ Equipo</a>
+    <a href="minijuego.html" class="nav-link active">🎮 ¿Quién es?</a>
+    <a href="pokedle.html" class="nav-link">🧩 Pokedle</a>
+    <a href="typematchup.html" class="nav-link">⚡ Type Matchup</a>
   </nav>
 
   <div class="game-card">
@@ -152,7 +67,6 @@
       img.classList.remove('revealed');
       img.src = '';
 
-      // Obtener 4 Pokémon aleatorios
       const randomIds = Array.from({length: 4}, () => Math.floor(Math.random() * 151) + 1);
       const pokemonData = await Promise.all(randomIds.map(id => fetch(`https://pokeapi.co/api/v2/pokemon/${id}`).then(r => r.json())));
 
