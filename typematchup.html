@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Type Matchup Quiz | 91Adrian91</title>
+  <style>
+    body {
+      margin: 0; padding: 30px 15px; min-height: 100vh;
+      display: flex; flex-direction: column; align-items: center;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; color: #fff;
+      background: linear-gradient(rgba(0,0,0,0.85), rgba(0,0,0,0.85)), 
+                  url('https://images.unsplash.com/photo-1506703719100-a0f3a48c0f86?q=80&w=1920&auto=format&fit=crop');
+      background-size: cover; background-attachment: fixed;
+    }
+    .nav-bar { display: flex; gap: 10px; background: rgba(15,15,30,0.85); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.15); padding: 10px 18px; border-radius: 30px; margin-bottom: 25px; flex-wrap: wrap; justify-content: center; }
+    .nav-link { color: #a0a0d0; text-decoration: none; font-weight: bold; padding: 8px 14px; border-radius: 18px; transition: 0.3s; font-size: 0.85rem; }
+    .nav-link:hover { color: #fff; background: rgba(255,255,255,0.1); }
+    .nav-link.active { color: #000; background: linear-gradient(135deg, #ffd700, #ff8c00); }
+
+    .game-card { background: rgba(20,20,35,0.85); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.15); border-radius: 20px; padding: 25px; max-width: 420px; width: 100%; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.7); }
+    .type-badge { padding: 8px 16px; border-radius: 12px; font-weight: bold; font-size: 1.2rem; text-transform: uppercase; display: inline-block; margin: 15px 0; }
+    .options-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 15px; }
+    .btn-opt { background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); color: #fff; padding: 12px; border-radius: 12px; font-weight: bold; cursor: pointer; text-transform: uppercase; }
+    .btn-opt:hover { background: rgba(255,255,255,0.25); }
+    .correct { background: #4CAF50 !important; }
+    .wrong { background: #f44336 !important; }
+    
+    .fire { background: #F08030; } .water { background: #6890F0; } .grass { background: #78C850; }
+    .electric { background: #F8D030; color: #000; } .ice { background: #98D8D8; color: #000; }
+  </style>
+</head>
+<body>
+
+  <nav class="nav-bar">
+    <a href="index.html" class="nav-link">⚔️ Equipo</a>
+    <a href="minijuego.html" class="nav-link">🎮 ¿Quién es?</a>
+    <a href="pokedle.html" class="nav-link">🧩 Pokedle</a>
+    <a href="typematchup.html" class="nav-link active">⚡ Type Matchup</a>
+  </nav>
+
+  <div class="game-card">
+    <h2>⚡ Type Matchup Quiz</h2>
+    <p>Puntos: <span id="score" style="color:#ffd700; font-weight:bold;">0</span></p>
+
+    <p id="questionText">¿Qué tipo es súper efectivo (x2) contra...?</p>
+    <div id="targetType" class="type-badge fire">Fuego</div>
+
+    <div class="options-grid" id="optionsGrid"></div>
+  </div>
+
+  <script>
+    let score = 0;
+    let currentTarget = '';
+    let correctType = '';
+
+    const matchups = {
+      fire: { weakTo: 'water', name: 'Fuego', class: 'fire' },
+      water: { weakTo: 'electric', name: 'Agua', class: 'water' },
+      grass: { weakTo: 'fire', name: 'Planta', class: 'grass' },
+      electric: { weakTo: 'ground', name: 'Eléctrico', class: 'electric' },
+      ice: { weakTo: 'fire', name: 'Hielo', class: 'ice' }
+    };
+
+    const typeNames = { water: 'Agua', electric: 'Eléctrico', fire: 'Fuego', ground: 'Tierra', grass: 'Planta' };
+
+    function nextQuestion() {
+      const keys = Object.keys(matchups);
+      const randomKey = keys[Math.floor(Math.random() * keys.length)];
+      const data = matchups[randomKey];
+
+      currentTarget = data.name;
+      correctType = data.weakTo;
+
+      const badge = document.getElementById('targetType');
+      badge.textContent = data.name;
+      badge.className = `type-badge ${data.class}`;
+
+      const grid = document.getElementById('optionsGrid');
+      grid.innerHTML = '';
+
+      const options = ['water', 'electric', 'fire', 'ground', 'grass'];
+      options.sort(() => Math.random() - 0.5);
+
+      options.forEach(opt => {
+        const btn = document.createElement('button');
+        btn.className = 'btn-opt';
+        btn.textContent = typeNames[opt];
+        btn.onclick = () => check(opt, btn);
+        grid.appendChild(btn);
+      });
+    }
+
+    function check(selected, btn) {
+      if (selected === correctType) {
+        btn.classList.add('correct');
+        score += 10;
+        document.getElementById('score').textContent = score;
+      } else {
+        btn.classList.add('wrong');
+      }
+      setTimeout(nextQuestion, 800);
+    }
+
+    nextQuestion();
+  </script>
+</body>
+</html>
