@@ -3,410 +3,688 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Simulador de Combate Showdown | 91Adrian91</title>
+  <title>Combate Pokémon | 91Adrian91</title>
+  <script src="https://cdn.tailwindcss.com"></script>
   <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; }
+    * { box-sizing: border-box; margin: 0; padding: 0; user-select: none; }
     body {
-      min-height: 100vh; padding: 20px 10px;
-      display: flex; flex-direction: column; align-items: center;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; color: #fff;
-      background: linear-gradient(rgba(0,0,0,0.85), rgba(0,0,0,0.85)), 
-                  url('https://images.unsplash.com/photo-1506703719100-a0f3a48c0f86?q=80&w=1920&auto=format&fit=crop');
-      background-size: cover; background-position: center; background-attachment: fixed;
+      min-height: 100vh;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      color: #fff;
+      background: #080810;
+      overflow-x: hidden;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
     }
 
-    .nav-bar { display: flex; gap: 10px; background: rgba(15, 15, 30, 0.85); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.15); padding: 10px 18px; border-radius: 30px; margin-bottom: 20px; flex-wrap: wrap; justify-content: center; }
+    /* Navigation Bar */
+    .nav-bar {
+      display: flex; gap: 10px; background: rgba(15, 15, 30, 0.85);
+      backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.15);
+      padding: 10px 18px; border-radius: 30px; margin: 15px 0; flex-wrap: wrap; justify-content: center;
+      z-index: 50;
+    }
     .nav-link { color: #a0a0d0; text-decoration: none; font-weight: bold; padding: 8px 14px; border-radius: 18px; transition: 0.3s; font-size: 0.85rem; }
     .nav-link:hover { color: #fff; background: rgba(255,255,255,0.1); }
     .nav-link.active { color: #000; background: linear-gradient(135deg, #ffd700, #ff8c00); }
 
-    .main-container { width: 100%; max-width: 950px; background: rgba(18, 18, 30, 0.92); border: 1px solid rgba(255,255,255,0.15); border-radius: 16px; padding: 20px; box-shadow: 0 15px 35px rgba(0,0,0,0.7); }
-
-    /* MENU DE SELECCION */
-    .mode-selector { text-align: center; display: flex; flex-direction: column; align-items: center; gap: 20px; padding: 20px; }
-    .btn-mode { background: linear-gradient(135deg, #ff8c00, #ffd700); color: #000; border: none; padding: 15px 25px; border-radius: 12px; font-weight: bold; font-size: 1.1rem; cursor: pointer; transition: 0.3s; width: 100%; max-width: 320px; box-shadow: 0 5px 15px rgba(255, 140, 0, 0.3); }
-    .btn-mode:hover { transform: translateY(-3px); scale: 1.02; }
-
-    /* TEAMPICKER */
-    .team-picker { display: none; flex-direction: column; gap: 15px; }
-    .search-box { display: flex; gap: 10px; justify-content: center; margin-bottom: 10px; }
-    .input-poke { padding: 10px 15px; border-radius: 8px; border: 1px solid #555; background: #111; color: #fff; width: 250px; font-size: 1rem; }
-    .btn-add { background: #ff8c00; color: #000; font-weight: bold; border: none; padding: 10px 15px; border-radius: 8px; cursor: pointer; }
-    .custom-team-list { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 10px; }
-    .custom-slot { background: rgba(255,255,255,0.05); border: 1px dashed #555; border-radius: 10px; height: 110px; display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative; }
-    .custom-slot img { height: 60px; }
-    .btn-remove { position: absolute; top: 4px; right: 6px; background: #f44336; border: none; color: #fff; border-radius: 50%; width: 20px; height: 20px; cursor: pointer; font-size: 0.7rem; }
-
-    /* ARENA SHOWDOWN */
-    .battle-field { display: none; flex-direction: column; gap: 15px; }
-    .arena { height: 320px; background: radial-gradient(circle at center, #2b4538 0%, #111e2e 100%); border-radius: 12px; position: relative; border: 1px solid rgba(255,255,255,0.2); overflow: hidden; box-shadow: inset 0 0 50px rgba(0,0,0,0.8); }
-    
-    .poke-stage { position: absolute; display: flex; flex-direction: column; align-items: center; width: 200px; }
-    .stage-foe { top: 25px; right: 40px; }
-    .stage-player { bottom: 15px; left: 40px; }
-
-    .platform { position: absolute; bottom: 0; width: 160px; height: 30px; background: rgba(255,255,255,0.1); border-radius: 50%; z-index: 1; transform: scaleY(0.4); border: 2px solid rgba(255,255,255,0.2); }
-
-    .status-bar { background: rgba(10, 10, 20, 0.85); border: 1px solid rgba(255,255,255,0.2); border-radius: 8px; padding: 6px 12px; width: 100%; font-size: 0.85rem; z-index: 5; }
-    .hp-bg { background: #222; height: 8px; border-radius: 4px; overflow: hidden; margin-top: 4px; border: 1px solid #444; }
-    .hp-fill { background: #4CAF50; height: 100%; width: 100%; transition: width 0.4s ease-in-out; }
-
-    /* SPRITES CON ANIMACION SHOWDOWN */
-    .sprite-foe { height: 130px; z-index: 2; image-rendering: pixelated; filter: drop-shadow(0 10px 8px rgba(0,0,0,0.6)); }
-    .sprite-player { height: 140px; z-index: 2; image-rendering: pixelated; filter: drop-shadow(0 10px 8px rgba(0,0,0,0.6)); }
-
-    /* ANIMACION AL ATAQUE */
-    .shake { animation: shake 0.4s cubic-bezier(.36,.07,.19,.97) both; }
-    @keyframes shake {
-      10%, 90% { transform: translate3d(-2px, 0, 0); }
-      20%, 80% { transform: translate3d(4px, 0, 0); }
-      30%, 50%, 70% { transform: translate3d(-6px, 0, 0); }
-      40%, 60% { transform: translate3d(6px, 0, 0); }
+    /* Battle Arena Stage */
+    .battle-container {
+      position: relative;
+      width: 100%;
+      max-width: 960px;
+      height: 520px;
+      border-radius: 20px;
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      box-shadow: 0 20px 50px rgba(0,0,0,0.8), 0 0 30px rgba(255, 215, 0, 0.1);
+      background: radial-gradient(circle at center, #1b2038 0%, #0a0c16 100%);
     }
 
-    /* CONTROLES ESTILO SHOWDOWN */
-    .battle-controls { display: grid; grid-template-columns: 2fr 1fr; gap: 15px; }
-    .moves-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
-    .btn-move { background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.2); color: #fff; padding: 12px; border-radius: 8px; cursor: pointer; font-weight: bold; transition: 0.2s; text-align: left; display: flex; flex-direction: column; justify-content: space-between; }
-    .btn-move:hover { background: rgba(255,255,255,0.2); border-color: #ffd700; transform: scale(1.02); }
-    .move-type { font-size: 0.7rem; color: #ffd700; text-transform: uppercase; margin-top: 4px; }
-
-    .switch-team { display: flex; flex-direction: column; gap: 6px; background: rgba(0,0,0,0.4); padding: 10px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); }
-    .btn-switch { background: rgba(255,255,255,0.05); border: 1px solid #444; color: #fff; padding: 6px 10px; border-radius: 6px; cursor: pointer; font-size: 0.8rem; text-align: left; display: flex; align-items: center; justify-content: space-between; }
-    .btn-switch:hover { background: rgba(255,255,255,0.2); }
-    .btn-switch img { height: 28px; }
-
-    .log-box { background: #080810; border: 1px solid #222; height: 110px; border-radius: 8px; padding: 10px; font-family: monospace; font-size: 0.85rem; overflow-y: auto; color: #39ff14; margin-top: 10px; }
-
-    @media (max-width: 600px) {
-      .battle-controls { grid-template-columns: 1fr; }
-      .stage-foe { right: 10px; }
-      .stage-player { left: 10px; }
+    .arena-bg {
+      position: absolute; width: 100%; height: 100%; top: 0; left: 0;
+      background: linear-gradient(to bottom, rgba(12, 14, 28, 0.4) 0%, rgba(5, 5, 12, 0.8) 100%),
+                  url('https://images.unsplash.com/photo-1518709268805-4e9042af9f23?q=80&w=1920&auto=format&fit=crop');
+      background-size: cover; background-position: center;
     }
+
+    /* Ground platforms */
+    .platform {
+      position: absolute; border-radius: 50%;
+      background: radial-gradient(ellipse at center, rgba(80, 100, 160, 0.4) 0%, rgba(20, 25, 45, 0.8) 70%, transparent 100%);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      transform: scaleY(0.35);
+    }
+    .platform-enemy { width: 320px; height: 160px; top: 120px; right: 80px; }
+    .platform-player { width: 380px; height: 180px; bottom: 20px; left: 80px; }
+
+    /* Pokémon Sprites */
+    .poke-stage {
+      position: absolute; display: flex; flex-direction: column; align-items: center; justify-content: flex-end;
+      transition: all 0.5s ease;
+    }
+    .poke-enemy-stage { top: 70px; right: 140px; width: 200px; height: 200px; }
+    .poke-player-stage { bottom: 60px; left: 160px; width: 220px; height: 220px; }
+
+    .sprite-img {
+      max-width: 180px; max-height: 180px; filter: drop-shadow(0 10px 15px rgba(0,0,0,0.6));
+      transition: transform 0.2s ease, filter 0.3s;
+      object-fit: contain;
+    }
+
+    /* HUD Elements */
+    .hud-box {
+      position: absolute; width: 320px; padding: 12px 16px;
+      background: rgba(15, 20, 35, 0.82); backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.18); border-radius: 16px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.5); z-index: 20;
+    }
+    .hud-enemy { top: 25px; left: 30px; }
+    .hud-player { bottom: 35px; right: 30px; }
+
+    .hp-bar-bg { width: 100%; height: 12px; background: rgba(255,255,255,0.1); border-radius: 6px; overflow: hidden; border: 1px solid rgba(0,0,0,0.5); }
+    .hp-bar-fill { height: 100%; width: 100%; background: #4CAF50; transition: width 0.6s ease-out, background-color 0.4s; }
+
+    /* Animations & VFX Classes */
+    @keyframes hitShake {
+      0% { transform: translate(0, 0); }
+      20% { transform: translate(-12px, 8px); filter: brightness(3) sepia(1) hue-rotate(-50deg); }
+      40% { transform: translate(12px, -8px); }
+      60% { transform: translate(-8px, -4px); }
+      80% { transform: translate(8px, 4px); }
+      100% { transform: translate(0, 0); }
+    }
+
+    @keyframes attackDashRight {
+      0% { transform: translateX(0) scale(1); }
+      50% { transform: translateX(120px) scale(1.15); }
+      100% { transform: translateX(0) scale(1); }
+    }
+
+    @keyframes attackDashLeft {
+      0% { transform: translateX(0) scale(1); }
+      50% { transform: translateX(-120px) scale(1.15); }
+      100% { transform: translateX(0) scale(1); }
+    }
+
+    @keyframes floatDamage {
+      0% { opacity: 1; transform: translateY(0) scale(1); }
+      50% { transform: translateY(-40px) scale(1.3); }
+      100% { opacity: 0; transform: translateY(-70px) scale(0.9); }
+    }
+
+    .anim-shake { animation: hitShake 0.45s ease-in-out; }
+    .anim-dash-player { animation: attackDashRight 0.4s cubic-bezier(0.25, 1, 0.5, 1); }
+    .anim-dash-enemy { animation: attackDashLeft 0.4s cubic-bezier(0.25, 1, 0.5, 1); }
+
+    .damage-num {
+      position: absolute; font-weight: 900; font-size: 2rem; color: #ff3366;
+      text-shadow: 0 0 10px #000, 2px 2px 0 #000, -2px -2px 0 #000;
+      animation: floatDamage 1s forwards ease-out; pointer-events: none; z-index: 40;
+    }
+
+    /* Special Effect Layer Canvas */
+    #vfxCanvas {
+      position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+      pointer-events: none; z-index: 30;
+    }
+
+    /* Type badge colors */
+    .type-normal { background: #A8A878; color: #fff; }
+    .type-fire { background: #F08030; color: #fff; }
+    .type-water { background: #6890F0; color: #fff; }
+    .type-grass { background: #78C850; color: #fff; }
+    .type-electric { background: #F8D030; color: #000; }
+    .type-ice { background: #98D8D8; color: #000; }
+    .type-fighting { background: #C03028; color: #fff; }
+    .type-poison { background: #A040A0; color: #fff; }
+    .type-ground { background: #E0C068; color: #000; }
+    .type-flying { background: #A890F0; color: #fff; }
+    .type-psychic { background: #F85888; color: #fff; }
+    .type-bug { background: #A8B820; color: #fff; }
+    .type-rock { background: #B8A038; color: #fff; }
+    .type-ghost { background: #705898; color: #fff; }
+    .type-dragon { background: #7038F8; color: #fff; }
+    .type-dark { background: #705848; color: #fff; }
+    .type-steel { background: #B8B8D0; color: #000; }
+    .type-fairy { background: #EE99AC; color: #000; }
+
+    /* Control Panel */
+    .controls-panel {
+      width: 100%; max-width: 960px; margin-top: 15px; display: grid; grid-template-columns: 2fr 1fr; gap: 15px;
+    }
+    .action-box {
+      background: rgba(15, 20, 35, 0.85); backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.15); border-radius: 16px; padding: 15px;
+    }
+    .move-btn {
+      background: rgba(255, 255, 255, 0.06); border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 12px; padding: 12px; transition: all 0.2s; cursor: pointer; text-align: left;
+    }
+    .move-btn:hover:not(:disabled) {
+      background: rgba(255, 255, 255, 0.15); transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    }
+    .move-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+    .log-box {
+      background: rgba(10, 12, 22, 0.9); border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 16px; padding: 12px 15px; font-size: 0.85rem; height: 160px;
+      overflow-y: auto; color: #d0d0e8; font-family: monospace; display: flex; flex-direction: column-reverse;
+    }
+
+    /* Pokeball indicator dots */
+    .pokeball-dot { width: 12px; height: 12px; border-radius: 50%; display: inline-block; background: #555; border: 1px solid #222; }
+    .pokeball-dot.active { background: #4CAF50; box-shadow: 0 0 6px #4CAF50; }
+    .pokeball-dot.fainted { background: #f44336; }
   </style>
 </head>
-<body>
+<body class="p-4">
 
+  <!-- NAVIGATION -->
   <nav class="nav-bar">
-    <a href="index.html" class="nav-link">⚔️ Equipo</a>
+    <a href="index.html" class="nav-link">⚔️️ Equipo</a>
     <a href="minijuego.html" class="nav-link">🎮 ¿Quién es?</a>
     <a href="pokedle.html" class="nav-link">🧩 Pokedle</a>
     <a href="typematchup.html" class="nav-link">⚡ Type Matchup</a>
     <a href="batalla.html" class="nav-link active">⚔️ Combate</a>
   </nav>
 
-  <div class="main-container">
+  <!-- BATTLE ARENA -->
+  <div class="battle-container">
+    <div class="arena-bg"></div>
+    <canvas id="vfxCanvas"></canvas>
 
-    <!-- SELECCION DE MODO -->
-    <div class="mode-selector" id="modeMenu">
-      <h2 style="color: #ffd700;">⚔️ Simulador de Batalla Showdown</h2>
-      <p style="color: #aaa;">Combate en tiempo real con Pokémon animados</p>
-      <button class="btn-mode" onclick="startRandomBattle()">🎲 Batalla Aleatoria (Random Battle)</button>
-      <button class="btn-mode" style="background: linear-gradient(135deg, #4b6cb7, #182848); color: #fff;" onclick="openCustomBuilder()">📝 Crear tu propio equipo</button>
+    <!-- Enemy Platform & Pokémon -->
+    <div class="platform platform-enemy"></div>
+    <div class="poke-stage poke-enemy-stage" id="enemyStage">
+      <img id="enemySprite" class="sprite-img" src="" alt="Enemy Pokemon">
     </div>
 
-    <!-- SELECCIONADOR DE EQUIPO PROPIO -->
-    <div class="team-picker" id="teamPicker">
-      <h3 style="text-align:center; color:#ffd700;">Elige hasta 6 Pokémon</h3>
-      <div class="search-box">
-        <input type="text" id="pokeSearchInput" class="input-poke" placeholder="Ejemplo: Gengar, Lucario...">
-        <button class="btn-add" onclick="addPokemonToCustom()">Añadir</button>
+    <!-- Enemy HUD -->
+    <div class="hud-box hud-enemy">
+      <div class="flex justify-between items-center mb-1">
+        <span id="enemyName" class="font-bold text-lg text-white">---</span>
+        <span id="enemyLvl" class="text-xs text-yellow-400 font-bold">Lv.50</span>
       </div>
-      <div class="custom-team-list" id="customTeamList"></div>
-      <button class="btn-mode" style="margin: 15px auto 0 auto;" onclick="startCustomBattle()">¡Empezar Combate! ⚔️</button>
+      <div class="hp-bar-bg mb-2">
+        <div id="enemyHpFill" class="hp-bar-fill"></div>
+      </div>
+      <div class="flex justify-between items-center text-xs">
+        <div id="enemyBalls" class="flex gap-1"></div>
+        <span id="enemyHpText" class="text-gray-400 font-mono">100%</span>
+      </div>
     </div>
 
-    <!-- ARENA DE COMBATE -->
-    <div class="battle-field" id="battleField">
-      <div class="arena">
-        <!-- Oponente -->
-        <div class="poke-stage stage-foe">
-          <div class="status-bar">
-            <span id="foeName" style="text-transform:capitalize; font-weight:bold;">Oponente</span> <span style="float:right; color:#ffd700;">Lv100</span>
-            <div class="hp-bg"><div class="hp-fill" id="foeHpBar"></div></div>
-          </div>
-          <img id="foeSprite" class="sprite-foe" src="" alt="Foe">
-          <div class="platform"></div>
-        </div>
-
-        <!-- Jugador -->
-        <div class="poke-stage stage-player">
-          <img id="playerSprite" class="sprite-player" src="" alt="Player">
-          <div class="platform"></div>
-          <div class="status-bar">
-            <span id="playerName" style="text-transform:capitalize; font-weight:bold;">Jugador</span> <span style="float:right; color:#ffd700;">Lv100</span>
-            <div class="hp-bg"><div class="hp-fill" id="playerHpBar"></div></div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Controles -->
-      <div class="battle-controls">
-        <div class="moves-grid" id="movesGrid"></div>
-        <div class="switch-team">
-          <span style="font-size:0.75rem; color:#aaa; font-weight:bold; margin-bottom: 4px;">EQUIPO (CAMBIAR)</span>
-          <div id="switchList" style="display:flex; flex-direction:column; gap:4px;"></div>
-        </div>
-      </div>
-
-      <!-- Registro de combate -->
-      <div class="log-box" id="battleLog"></div>
+    <!-- Player Platform & Pokémon -->
+    <div class="platform platform-player"></div>
+    <div class="poke-stage poke-player-stage" id="playerStage">
+      <img id="playerSprite" class="sprite-img" src="" alt="Player Pokemon">
     </div>
 
+    <!-- Player HUD -->
+    <div class="hud-box hud-player">
+      <div class="flex justify-between items-center mb-1">
+        <span id="playerName" class="font-bold text-lg text-white">---</span>
+        <span id="playerLvl" class="text-xs text-yellow-400 font-bold">Lv.50</span>
+      </div>
+      <div class="hp-bar-bg mb-2">
+        <div id="playerHpFill" class="hp-bar-fill"></div>
+      </div>
+      <div class="flex justify-between items-center text-xs">
+        <div id="playerBalls" class="flex gap-1"></div>
+        <span id="playerHpText" class="text-gray-300 font-mono">--- / ---</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- CONTROL PANEL & COMBAT LOG -->
+  <div class="controls-panel">
+    <!-- Moves & Actions -->
+    <div class="action-box">
+      <div class="flex justify-between items-center mb-3">
+        <span class="text-sm font-bold text-amber-400 uppercase tracking-wider" id="panelTitle">Selecciona un Ataque</span>
+        <button id="btnSwitchMode" onclick="toggleSwitchPanel()" class="text-xs bg-slate-800 hover:bg-slate-700 border border-slate-600 px-3 py-1.5 rounded-lg transition font-bold text-cyan-300">
+          🔄 Cambiar Pokémon
+        </button>
+      </div>
+
+      <!-- Moves Grid -->
+      <div id="movesGrid" class="grid grid-cols-2 gap-3"></div>
+
+      <!-- Switch Team Panel (Hidden by default) -->
+      <div id="teamGrid" class="hidden grid grid-cols-3 gap-2"></div>
+    </div>
+
+    <!-- Combat Log -->
+    <div class="action-box flex flex-col justify-between">
+      <span class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Registro de Combate</span>
+      <div id="combatLog" class="log-box"></div>
+    </div>
   </div>
 
   <script>
-    let playerTeam = [];
-    let foeTeam = [];
-    let activePlayerIdx = 0;
-    let activeFoeIdx = 0;
-    let customList = [];
+    // Synthetic Audio Generator for retro/arcade Pokémon style SFX
+    const AudioCtx = window.AudioContext || window.webkitAudioContext;
+    let audioCtx = null;
 
-    const moveDatabase = {
-      fire: { name: 'Flamethrower', power: 90, type: 'fire' },
-      water: { name: 'Surf', power: 90, type: 'water' },
-      grass: { name: 'Energy Ball', power: 90, type: 'grass' },
-      electric: { name: 'Thunderbolt', power: 90, type: 'electric' },
-      ice: { name: 'Ice Beam', power: 90, type: 'ice' },
-      fighting: { name: 'Close Combat', power: 120, type: 'fighting' },
-      poison: { name: 'Sludge Bomb', power: 90, type: 'poison' },
-      ground: { name: 'Earthquake', power: 100, type: 'ground' },
-      flying: { name: 'Air Slash', power: 75, type: 'flying' },
-      psychic: { name: 'Psychic', power: 90, type: 'psychic' },
-      bug: { name: 'Bug Buzz', power: 90, type: 'bug' },
-      rock: { name: 'Stone Edge', power: 100, type: 'rock' },
-      ghost: { name: 'Shadow Ball', power: 80, type: 'ghost' },
-      dragon: { name: 'Dragon Pulse', power: 85, type: 'dragon' },
-      dark: { name: 'Dark Pulse', power: 80, type: 'dark' },
-      steel: { name: 'Flash Cannon', power: 80, type: 'steel' },
-      fairy: { name: 'Moonblast', power: 95, type: 'fairy' },
-      normal: { name: 'Body Slam', power: 85, type: 'normal' }
+    function initAudio() {
+      if (!audioCtx) audioCtx = new AudioCtx();
+    }
+
+    function playSFX(type) {
+      initAudio();
+      if (!audioCtx) return;
+      const now = audioCtx.currentTime;
+
+      if (type === 'hit') {
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = 'sawtooth';
+        osc.frequency.setValueAtTime(120, now);
+        osc.frequency.exponentialRampToValueAtTime(20, now + 0.25);
+        gain.gain.setValueAtTime(0.3, now);
+        gain.gain.linearRampToValueAtTime(0.01, now + 0.25);
+        osc.connect(gain); gain.connect(audioCtx.destination);
+        osc.start(now); osc.stop(now + 0.25);
+      } else if (type === 'beam') {
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(800, now);
+        osc.frequency.linearRampToValueAtTime(200, now + 0.4);
+        gain.gain.setValueAtTime(0.2, now);
+        gain.gain.linearRampToValueAtTime(0.01, now + 0.4);
+        osc.connect(gain); gain.connect(audioCtx.destination);
+        osc.start(now); osc.stop(now + 0.4);
+      } else if (type === 'explosion') {
+        const bufferSize = audioCtx.sampleRate * 0.4;
+        const buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
+        const data = buffer.getChannelData(0);
+        for (let i = 0; i < bufferSize; i++) data[i] = Math.random() * 2 - 1;
+        const noise = audioCtx.createBufferSource();
+        noise.buffer = buffer;
+        const gain = audioCtx.createGain();
+        gain.gain.setValueAtTime(0.4, now);
+        gain.gain.exponentialRampToValueAtTime(0.01, now + 0.4);
+        noise.connect(gain); gain.connect(audioCtx.destination);
+        noise.start(now);
+      }
+    }
+
+    const MOVES_DB = {
+      'Earthquake': { power: 100, type: 'ground', vfx: 'earthquake' },
+      'Toxic': { power: 0, type: 'poison', vfx: 'poison' },
+      'Protect': { power: 0, type: 'normal', vfx: 'shield' },
+      'Substitute': { power: 0, type: 'normal', vfx: 'shield' },
+      'Shadow Ball': { power: 80, type: 'ghost', vfx: 'shadowball' },
+      'Sludge Bomb': { power: 90, type: 'poison', vfx: 'poison' },
+      'Focus Blast': { power: 120, type: 'fighting', vfx: 'beam' },
+      'Will-O-Wisp': { power: 0, type: 'fire', vfx: 'fire' },
+      'Dark Pulse': { power: 80, type: 'dark', vfx: 'darkpulse' },
+      'Nasty Plot': { power: 0, type: 'dark', vfx: 'buff' },
+      'Ice Beam': { power: 90, type: 'ice', vfx: 'icebeam' },
+      'Play Rough': { power: 90, type: 'fairy', vfx: 'slash' },
+      'Shadow Sneak': { power: 40, type: 'ghost', vfx: 'slash' },
+      'Swords Dance': { power: 0, type: 'normal', vfx: 'buff' },
+      'Drain Punch': { power: 75, type: 'fighting', vfx: 'slash' },
+      'Meteor Mash': { power: 90, type: 'steel', vfx: 'explosion' },
+      'Zen Headbutt': { power: 80, type: 'psychic', vfx: 'beam' },
+      'Bullet Punch': { power: 40, type: 'steel', vfx: 'slash' },
+      'Spikes': { power: 0, type: 'ground', vfx: 'earthquake' },
+      'Explosion': { power: 250, type: 'normal', vfx: 'explosion' },
+      'Flamethrower': { power: 90, type: 'fire', vfx: 'fire' },
+      'Hydro Pump': { power: 110, type: 'water', vfx: 'beam' },
+      'Thunderbolt': { power: 90, type: 'electric', vfx: 'beam' }
     };
 
-    async function fetchPokeData(idOrName) {
-      try {
-        const res = await fetch(`https://pokeapi.co/api/v2/pokemon/${idOrName.toString().toLowerCase()}`);
-        if (!res.ok) return null;
-        const data = await res.json();
-        
-        const moves = data.types.map(t => moveDatabase[t.type.name] || moveDatabase.normal);
-        while (moves.length < 4) moves.push(moveDatabase.normal);
+    const USER_TEAM_RAW = [
+      { id: 472, name: 'Gliscor', hp: 150, maxHp: 150, moves: ['Earthquake', 'Toxic', 'Protect', 'Substitute'] },
+      { id: 94,  name: 'Gengar', hp: 120, maxHp: 120, moves: ['Shadow Ball', 'Sludge Bomb', 'Focus Blast', 'Will-O-Wisp'] },
+      { id: 491, name: 'Darkrai', hp: 140, maxHp: 140, moves: ['Dark Pulse', 'Nasty Plot', 'Ice Beam', 'Focus Blast'] },
+      { id: 778, name: 'Mimikyu', hp: 115, maxHp: 115, moves: ['Play Rough', 'Shadow Sneak', 'Swords Dance', 'Drain Punch'] },
+      { id: 376, name: 'Metagross', hp: 160, maxHp: 160, moves: ['Meteor Mash', 'Zen Headbutt', 'Earthquake', 'Bullet Punch'] },
+      { id: 362, name: 'Glalie', hp: 140, maxHp: 140, moves: ['Ice Beam', 'Shadow Ball', 'Spikes', 'Explosion'] }
+    ];
 
-        // ANIMACIONES GIF REALES SHOWDOWN DE ESPALDA Y FRENTE
-        const frontGif = data.sprites.other.showdown.front_default || data.sprites.front_default;
-        const backGif = data.sprites.other.showdown.back_default || data.sprites.back_default || frontGif;
+    const RIVAL_TEAM_RAW = [
+      { id: 6,   name: 'Charizard', hp: 140, maxHp: 140, moves: ['Flamethrower', 'Focus Blast', 'Air Slash', 'Dragon Pulse'] },
+      { id: 130, name: 'Gyarados', hp: 165, maxHp: 165, moves: ['Hydro Pump', 'Earthquake', 'Ice Beam', 'Waterfall'] },
+      { id: 145, name: 'Zapdos', hp: 150, maxHp: 150, moves: ['Thunderbolt', 'Ice Beam', 'Toxic', 'Substitute'] },
+      { id: 445, name: 'Garchomp', hp: 170, maxHp: 170, moves: ['Earthquake', 'Play Rough', 'Fire Blast', 'Swords Dance'] },
+      { id: 282, name: 'Gardevoir', hp: 130, maxHp: 130, moves: ['Psychic', 'Moonblast', 'Shadow Ball', 'Focus Blast'] },
+      { id: 212, name: 'Scizor', hp: 145, maxHp: 145, moves: ['Bullet Punch', 'Swords Dance', 'Superpower', 'U-turn'] }
+    ];
 
-        return {
-          id: data.id,
-          name: data.name,
-          maxHp: data.stats[0].base_stat * 2 + 110,
-          currentHp: data.stats[0].base_stat * 2 + 110,
-          atk: data.stats[1].base_stat,
-          def: data.stats[2].base_stat,
-          spd: data.stats[5].base_stat,
-          types: data.types.map(t => t.type.name),
-          frontGif: frontGif,
-          backGif: backGif,
-          icon: data.sprites.front_default,
-          moves: moves.slice(0, 4)
-        };
-      } catch {
-        return null;
+    let playerTeam = JSON.parse(JSON.stringify(USER_TEAM_RAW));
+    let enemyTeam = JSON.parse(JSON.stringify(RIVAL_TEAM_RAW));
+
+    let activePlayerIdx = 0;
+    let activeEnemyIdx = 0;
+    let isBusy = false;
+
+    const canvas = document.getElementById('vfxCanvas');
+    const ctx = canvas.getContext('2d');
+
+    function resizeCanvas() {
+      canvas.width = canvas.parentElement.clientWidth;
+      canvas.height = canvas.parentElement.clientHeight;
+    }
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas();
+
+    class Particle {
+      constructor(x, y, color, vx, vy, size, shrink = 0.95) {
+        this.x = x; this.y = y; this.color = color;
+        this.vx = vx; this.vy = vy; this.size = size;
+        this.shrink = shrink; this.alpha = 1;
+      }
+      update() {
+        this.x += this.vx; this.y += this.vy;
+        this.size *= this.shrink;
+        this.alpha -= 0.02;
+      }
+      draw(c) {
+        c.save();
+        c.globalAlpha = Math.max(0, this.alpha);
+        c.fillStyle = this.color;
+        c.beginPath();
+        c.arc(this.x, this.y, Math.max(0.1, this.size), 0, Math.PI * 2);
+        c.fill();
+        c.restore();
       }
     }
 
-    async function startRandomBattle() {
-      document.getElementById('modeMenu').style.display = 'none';
-      log("Cargando Pokémon con animaciones...");
-
-      const randomPlayerIds = Array.from({length: 6}, () => Math.floor(Math.random() * 500) + 1);
-      const randomFoeIds = Array.from({length: 6}, () => Math.floor(Math.random() * 500) + 1);
-
-      playerTeam = await Promise.all(randomPlayerIds.map(id => fetchPokeData(id)));
-      foeTeam = await Promise.all(randomFoeIds.map(id => fetchPokeData(id)));
-
-      initArena();
+    let particles = [];
+    function animLoop() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      particles = particles.filter(p => p.alpha > 0 && p.size > 0.5);
+      particles.forEach(p => { p.update(); p.draw(ctx); });
+      requestAnimationFrame(animLoop);
     }
+    animLoop();
 
-    function openCustomBuilder() {
-      document.getElementById('modeMenu').style.display = 'none';
-      document.getElementById('teamPicker').style.display = 'flex';
-      renderCustomSlots();
-    }
+    function triggerVFX(vfxType, targetIsEnemy) {
+      const targetStage = targetIsEnemy ? document.getElementById('enemyStage') : document.getElementById('playerStage');
+      const originStage = targetIsEnemy ? document.getElementById('playerStage') : document.getElementById('enemyStage');
 
-    async function addPokemonToCustom() {
-      if (customList.length >= 6) return alert("¡El equipo ya está lleno!");
-      const val = document.getElementById('pokeSearchInput').value.trim();
-      if (!val) return;
+      const tRect = targetStage.getBoundingClientRect();
+      const oRect = originStage.getBoundingClientRect();
+      const container = canvas.getBoundingClientRect();
 
-      const p = await fetchPokeData(val);
-      if (!p) return alert("Pokémon no encontrado");
+      const tx = tRect.left + tRect.width / 2 - container.left;
+      const ty = tRect.top + tRect.height / 2 - container.top;
+      const ox = oRect.left + oRect.width / 2 - container.left;
+      const oy = oRect.top + oRect.height / 2 - container.top;
 
-      customList.push(p);
-      document.getElementById('pokeSearchInput').value = '';
-      renderCustomSlots();
-    }
-
-    function removeCustom(idx) {
-      customList.splice(idx, 1);
-      renderCustomSlots();
-    }
-
-    function renderCustomSlots() {
-      const container = document.getElementById('customTeamList');
-      container.innerHTML = '';
-      for (let i = 0; i < 6; i++) {
-        const slot = document.createElement('div');
-        slot.className = 'custom-slot';
-        if (customList[i]) {
-          slot.innerHTML = `
-            <button class="btn-remove" onclick="removeCustom(${i})">✕</button>
-            <img src="${customList[i].icon}">
-            <span style="font-size:0.75rem; text-transform:capitalize;">${customList[i].name}</span>
-          `;
-        } else {
-          slot.innerHTML = `<span style="color:#555; font-size:0.8rem;">Slot ${i+1}</span>`;
+      if (vfxType === 'shadowball' || vfxType === 'icebeam' || vfxType === 'poison') {
+        const color = vfxType === 'shadowball' ? '#9933ff' : vfxType === 'icebeam' ? '#66ffff' : '#cc33ff';
+        playSFX('beam');
+        for (let i = 0; i < 25; i++) {
+          const progress = i / 25;
+          const px = ox + (tx - ox) * progress;
+          const py = oy + (ty - oy) * progress;
+          setTimeout(() => {
+            for (let k = 0; k < 8; k++) {
+              particles.push(new Particle(px, py, color, (Math.random() - 0.5) * 4, (Math.random() - 0.5) * 4, 12, 0.92));
+            }
+          }, i * 15);
         }
-        container.appendChild(slot);
-      }
-    }
-
-    async function startCustomBattle() {
-      if (customList.length === 0) return alert("Agrega al menos 1 Pokémon");
-      playerTeam = customList;
-      
-      const randomFoeIds = Array.from({length: customList.length}, () => Math.floor(Math.random() * 500) + 1);
-      foeTeam = await Promise.all(randomFoeIds.map(id => fetchPokeData(id)));
-
-      document.getElementById('teamPicker').style.display = 'none';
-      initArena();
-    }
-
-    function initArena() {
-      document.getElementById('battleField').style.display = 'flex';
-      activePlayerIdx = 0;
-      activeFoeIdx = 0;
-      updateField();
-      log(`¡Comienza el combate Showdown! ¡Adelante ${playerTeam[0].name.toUpperCase()}!`);
-    }
-
-    function updateField() {
-      const p = playerTeam[activePlayerIdx];
-      const f = foeTeam[activeFoeIdx];
-
-      document.getElementById('playerName').textContent = p.name;
-      document.getElementById('playerSprite').src = p.backGif;
-      const pPct = Math.max(0, (p.currentHp / p.maxHp) * 100);
-      document.getElementById('playerHpBar').style.width = pPct + '%';
-
-      document.getElementById('foeName').textContent = f.name;
-      document.getElementById('foeSprite').src = f.frontGif;
-      const fPct = Math.max(0, (f.currentHp / f.maxHp) * 100);
-      document.getElementById('foeHpBar').style.width = fPct + '%';
-
-      const movesContainer = document.getElementById('movesGrid');
-      movesContainer.innerHTML = '';
-      p.moves.forEach(m => {
-        const btn = document.createElement('button');
-        btn.className = 'btn-move';
-        btn.innerHTML = `<span>${m.name}</span><span class="move-type">Tipo: ${m.type}</span>`;
-        btn.onclick = () => executeTurn(m);
-        if (p.currentHp <= 0) btn.disabled = true;
-        movesContainer.appendChild(btn);
-      });
-
-      const switchContainer = document.getElementById('switchList');
-      switchContainer.innerHTML = '';
-      playerTeam.forEach((member, i) => {
-        if (i === activePlayerIdx) return;
-        const btn = document.createElement('button');
-        btn.className = 'btn-switch';
-        btn.innerHTML = `<span style="text-transform:capitalize;"><img src="${member.icon}" style="vertical-align:middle;"> ${member.name}</span> <span>${Math.round((member.currentHp/member.maxHp)*100)}%</span>`;
-        btn.onclick = () => switchPokemon(i);
-        if (member.currentHp <= 0) btn.disabled = true;
-        switchContainer.appendChild(btn);
-      });
-    }
-
-    function executeTurn(playerMove) {
-      const p = playerTeam[activePlayerIdx];
-      const f = foeTeam[activeFoeIdx];
-
-      const foeMove = f.moves[Math.floor(Math.random() * f.moves.length)];
-
-      if (p.spd >= f.spd) {
-        attack(p, f, playerMove, 'foeSprite', () => {
-          if (f.currentHp > 0) attack(f, p, foeMove, 'playerSprite', checkFaints);
-          else checkFaints();
-        });
+      } else if (vfxType === 'fire') {
+        playSFX('beam');
+        for (let i = 0; i < 40; i++) {
+          const color = Math.random() > 0.5 ? '#ff4400' : '#ffbb00';
+          particles.push(new Particle(ox, oy, color, (tx - ox) * 0.03 + (Math.random() - 0.5) * 6, (ty - oy) * 0.03 + (Math.random() - 0.5) * 6, 16, 0.94));
+        }
+      } else if (vfxType === 'earthquake' || vfxType === 'explosion') {
+        playSFX('explosion');
+        for (let i = 0; i < 60; i++) {
+          const color = vfxType === 'explosion' ? '#ff3300' : '#ccaa66';
+          particles.push(new Particle(tx + (Math.random() - 0.5) * 80, ty + (Math.random() - 0.5) * 80, color, (Math.random() - 0.5) * 10, (Math.random() - 0.5) * 10, 18, 0.9));
+        }
       } else {
-        attack(f, p, foeMove, 'playerSprite', () => {
-          if (p.currentHp > 0) attack(p, f, playerMove, 'foeSprite', checkFaints);
-          else checkFaints();
-        });
+        // Default physical slash/impact
+        playSFX('hit');
+        for (let i = 0; i < 35; i++) {
+          particles.push(new Particle(tx, ty, '#ffffff', (Math.random() - 0.5) * 12, (Math.random() - 0.5) * 12, 10, 0.88));
+        }
       }
     }
 
-    function attack(attacker, defender, move, targetSpriteId, callback) {
-      log(`${attacker.name.toUpperCase()} usó ${move.name}!`);
-
-      // EFECTO VISUAL DE AGITACIÓN
-      const targetImg = document.getElementById(targetSpriteId);
-      targetImg.classList.add('shake');
-      setTimeout(() => targetImg.classList.remove('shake'), 400);
-
-      const damage = Math.floor(((20 * move.power * (attacker.atk / defender.def)) / 50) + 2);
-      defender.currentHp = Math.max(0, defender.currentHp - damage);
-
-      new Audio(`https://raw.githubusercontent.com/PokeAPI/cries/main/cries/pokemon/latest/${attacker.id}.ogg`).play().catch(()=>{});
-
-      updateField();
-      setTimeout(callback, 700);
-    }
-
-    function switchPokemon(newIdx) {
-      if (playerTeam[newIdx].currentHp <= 0) return;
-      activePlayerIdx = newIdx;
-      log(`¡Vuelve! ¡Adelante ${playerTeam[activePlayerIdx].name.toUpperCase()}!`);
-      
-      const f = foeTeam[activeFoeIdx];
-      const foeMove = f.moves[Math.floor(Math.random() * f.moves.length)];
-      attack(f, playerTeam[activePlayerIdx], foeMove, 'playerSprite', checkFaints);
-    }
-
-    function checkFaints() {
+    function updateUI() {
       const p = playerTeam[activePlayerIdx];
-      const f = foeTeam[activeFoeIdx];
+      const e = enemyTeam[activeEnemyIdx];
 
-      if (f.currentHp <= 0) {
-        log(`¡${f.name.toUpperCase()} enemigo se ha debilitado!`);
-        activeFoeIdx++;
-        if (activeFoeIdx >= foeTeam.length) {
-          log("🏆 ¡VICTORIA! Has derrotado al entrenador rival.");
-          alert("🏆 ¡Has ganado la batalla Showdown!");
-          return;
-        } else {
-          log(`El rival saca a ${foeTeam[activeFoeIdx].name.toUpperCase()}`);
-        }
-      }
+      // Sprites (Showdown Animated GIFs)
+      document.getElementById('playerSprite').src = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/back/${p.id}.gif`;
+      document.getElementById('enemySprite').src = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/${e.id}.gif`;
 
-      if (p.currentHp <= 0) {
-        log(`¡Tu ${p.name.toUpperCase()} se ha debilitado!`);
-        const aliveIdx = playerTeam.findIndex(m => m.currentHp > 0);
-        if (aliveIdx === -1) {
-          log("💀 DERROTA. Todos tus Pokémon se han debilitado.");
-          alert("💀 Has sido derrotado.");
-          return;
-        }
-      }
-      updateField();
+      // Names & HP
+      document.getElementById('playerName').innerText = p.name;
+      document.getElementById('enemyName').innerText = e.name;
+
+      const pPct = Math.max(0, (p.hp / p.maxHp) * 100);
+      const ePct = Math.max(0, (e.hp / e.maxHp) * 100);
+
+      const pFill = document.getElementById('playerHpFill');
+      const eFill = document.getElementById('enemyHpFill');
+
+      pFill.style.width = pPct + '%';
+      eFill.style.width = ePct + '%';
+
+      pFill.style.backgroundColor = pPct > 50 ? '#4CAF50' : pPct > 20 ? '#FFEB3B' : '#F44336';
+      eFill.style.backgroundColor = ePct > 50 ? '#4CAF50' : ePct > 20 ? '#FFEB3B' : '#F44336';
+
+      document.getElementById('playerHpText').innerText = `${p.hp} / ${p.maxHp}`;
+      document.getElementById('enemyHpText').innerText = `${Math.ceil(ePct)}%`;
+
+      // Balls indicator
+      renderBalls('playerBalls', playerTeam);
+      renderBalls('enemyBalls', enemyTeam);
+
+      // Render Moves
+      renderMoves();
     }
 
-    function log(msg) {
-      const logBox = document.getElementById('battleLog');
-      logBox.innerHTML += `<div>> ${msg}</div>`;
-      logBox.scrollTop = logBox.scrollHeight;
+    function renderBalls(containerId, team) {
+      const el = document.getElementById(containerId);
+      el.innerHTML = team.map(poke => `<span class="pokeball-dot ${poke.hp <= 0 ? 'fainted' : 'active'}"></span>`).join('');
     }
+
+    function renderMoves() {
+      const p = playerTeam[activePlayerIdx];
+      const grid = document.getElementById('movesGrid');
+      grid.innerHTML = '';
+
+      p.moves.forEach(mName => {
+        const move = MOVES_DB[mName] || { power: 60, type: 'normal' };
+        const btn = document.createElement('button');
+        btn.className = 'move-btn flex flex-col justify-between';
+        btn.disabled = isBusy || p.hp <= 0;
+        btn.onclick = () => handlePlayerAttack(mName);
+
+        btn.innerHTML = `
+          <div class="flex justify-between items-center w-full mb-1">
+            <span class="font-bold text-sm text-white">${mName}</span>
+            <span class="text-[10px] uppercase font-bold px-2 py-0.5 rounded ${'type-' + move.type}">${move.type}</span>
+          </div>
+          <div class="text-xs text-gray-400">Potencia: ${move.power || 'Status'}</div>
+        `;
+        grid.appendChild(btn);
+      });
+    }
+
+    function logMessage(msg) {
+      const log = document.getElementById('combatLog');
+      const item = document.createElement('div');
+      item.className = 'mb-1 leading-snug';
+      item.innerHTML = `<span class="text-gray-500">[${new Date().toLocaleTimeString().slice(0,5)}]</span> ${msg}`;
+      log.prepend(item);
+    }
+
+    function showDamageFloat(amount, targetStage) {
+      const rect = targetStage.getBoundingClientRect();
+      const container = document.querySelector('.battle-container').getBoundingClientRect();
+      const el = document.createElement('div');
+      el.className = 'damage-num';
+      el.innerText = `-${amount}`;
+      el.style.left = (rect.left - container.left + rect.width / 2 - 20) + 'px';
+      el.style.top = (rect.top - container.top + 20) + 'px';
+      document.querySelector('.battle-container').appendChild(el);
+      setTimeout(() => el.remove(), 1000);
+    }
+
+    async function handlePlayerAttack(moveName) {
+      if (isBusy) return;
+      isBusy = true;
+
+      const p = playerTeam[activePlayerIdx];
+      const e = enemyTeam[activeEnemyIdx];
+      const move = MOVES_DB[moveName] || { power: 50, type: 'normal', vfx: 'slash' };
+
+      logMessage(`<b class="text-cyan-400">${p.name}</b> usó <b class="text-yellow-400">${moveName}</b>!`);
+
+      // Animation Player Dash
+      const pStage = document.getElementById('playerStage');
+      pStage.classList.add('anim-dash-player');
+      setTimeout(() => pStage.classList.remove('anim-dash-player'), 400);
+
+      // VFX
+      triggerVFX(move.vfx, true);
+      await sleep(350);
+
+      // Enemy Shake & Damage
+      const eStage = document.getElementById('enemyStage');
+      eStage.classList.add('anim-shake');
+      setTimeout(() => eStage.classList.remove('anim-shake'), 450);
+
+      const dmg = move.power > 0 ? Math.floor(move.power * 0.8 + Math.random() * 15) : 0;
+      e.hp = Math.max(0, e.hp - dmg);
+      if (dmg > 0) showDamageFloat(dmg, eStage);
+
+      updateUI();
+      await sleep(800);
+
+      if (e.hp <= 0) {
+        logMessage(`<b class="text-red-400">${e.name}</b> enemigo fue debilitado!`);
+        await handleEnemyFaint();
+      } else {
+        await enemyTurn();
+      }
+
+      isBusy = false;
+      renderMoves();
+    }
+
+    async function enemyTurn() {
+      const e = enemyTeam[activeEnemyIdx];
+      const p = playerTeam[activePlayerIdx];
+      const moveName = e.moves[Math.floor(Math.random() * e.moves.length)];
+      const move = MOVES_DB[moveName] || { power: 50, type: 'normal', vfx: 'slash' };
+
+      logMessage(`<b class="text-red-400">${e.name}</b> enemigo usó <b class="text-yellow-400">${moveName}</b>!`);
+
+      const eStage = document.getElementById('enemyStage');
+      eStage.classList.add('anim-dash-enemy');
+      setTimeout(() => eStage.classList.remove('anim-dash-enemy'), 400);
+
+      triggerVFX(move.vfx, false);
+      await sleep(350);
+
+      const pStage = document.getElementById('playerStage');
+      pStage.classList.add('anim-shake');
+      setTimeout(() => pStage.classList.remove('anim-shake'), 450);
+
+      const dmg = move.power > 0 ? Math.floor(move.power * 0.75 + Math.random() * 12) : 0;
+      p.hp = Math.max(0, p.hp - dmg);
+      if (dmg > 0) showDamageFloat(dmg, pStage);
+
+      updateUI();
+      await sleep(800);
+
+      if (p.hp <= 0) {
+        logMessage(`<b class="text-cyan-400">${p.name}</b> se ha debilitado!`);
+        checkPlayerFaint();
+      }
+    }
+
+    async function handleEnemyFaint() {
+      activeEnemyIdx++;
+      if (activeEnemyIdx >= enemyTeam.length) {
+        logMessage(`<b class="text-yellow-400 font-bold">🎉 ¡HAS GANADO EL COMBATE!</b>`);
+      } else {
+        logMessage(`El rival envía a <b class="text-red-400">${enemyTeam[activeEnemyIdx].name}</b>!`);
+        updateUI();
+      }
+    }
+
+    function checkPlayerFaint() {
+      const nextAvailable = playerTeam.findIndex(pk => pk.hp > 0);
+      if (nextAvailable === -1) {
+        logMessage(`<b class="text-red-500 font-bold">☠️ ¡HAS SIDO DERROTADO!</b>`);
+      } else {
+        toggleSwitchPanel(true);
+      }
+    }
+
+    function toggleSwitchPanel(forceShow = false) {
+      const movesGrid = document.getElementById('movesGrid');
+      const teamGrid = document.getElementById('teamGrid');
+      const title = document.getElementById('panelTitle');
+
+      if (teamGrid.classList.contains('hidden') || forceShow) {
+        movesGrid.classList.add('hidden');
+        teamGrid.classList.remove('hidden');
+        title.innerText = 'Selecciona un Pokémon';
+        renderTeamSwitch();
+      } else {
+        teamGrid.classList.add('hidden');
+        movesGrid.classList.remove('hidden');
+        title.innerText = 'Selecciona un Ataque';
+      }
+    }
+
+    function renderTeamSwitch() {
+      const grid = document.getElementById('teamGrid');
+      grid.innerHTML = '';
+
+      playerTeam.forEach((pk, idx) => {
+        const btn = document.createElement('button');
+        btn.className = 'move-btn flex flex-col items-center justify-center p-2';
+        btn.disabled = pk.hp <= 0 || idx === activePlayerIdx || isBusy;
+        btn.onclick = () => switchPokemon(idx);
+
+        btn.innerHTML = `
+          <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pk.id}.png" class="w-12 h-12 object-contain">
+          <span class="font-bold text-xs text-white mt-1">${pk.name}</span>
+          <span class="text-[10px] ${pk.hp > 0 ? 'text-green-400' : 'text-red-400'}">${pk.hp}/${pk.maxHp} HP</span>
+        `;
+        grid.appendChild(btn);
+      });
+    }
+
+    async function switchPokemon(idx) {
+      if (isBusy) return;
+      isBusy = true;
+      activePlayerIdx = idx;
+      logMessage(`¡Adelante <b class="text-cyan-400">${playerTeam[idx].name}</b>!`);
+
+      toggleSwitchPanel();
+      updateUI();
+      playSFX('beam');
+
+      await sleep(600);
+      await enemyTurn();
+      isBusy = false;
+      renderMoves();
+    }
+
+    function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
+
+    // Start Combat
+    updateUI();
+    logMessage('<b>¡Comienza la Batalla Pokémon!</b>');
   </script>
 </body>
 </html>
