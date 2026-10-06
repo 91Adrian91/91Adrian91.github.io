@@ -39,7 +39,7 @@
 
     .poke-img-box { position: relative; width: 100%; height: 170px; display: flex; justify-content: center; align-items: center; margin: 10px 0; }
     .poke-img-box::before { content: ''; position: absolute; width: 130px; height: 130px; background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, rgba(0,0,0,0) 70%); border-radius: 50%; }
-    .poke-img { height: 150px; z-index: 2; filter: drop-shadow(0 10px 15px rgba(0,0,0,0.5)); transition: transform 0.3s; }
+    .poke-img { max-height: 140px; max-width: 140px; z-index: 2; filter: drop-shadow(0 10px 15px rgba(0,0,0,0.5)); transition: transform 0.3s; object-fit: contain; }
     .card:hover .poke-img { transform: scale(1.1); }
 
     .types { display: flex; gap: 8px; justify-content: center; margin-bottom: 10px; }
@@ -73,7 +73,7 @@
 </head>
 <body>
 
-  <!-- BARRA DE NAVEGACIÓN ACTUALIZADA CON COMBATE -->
+  <!-- BARRA DE NAVEGACIÓN CON EL BOTÓN COMBATE -->
   <nav class="nav-bar">
     <a href="index.html" class="nav-link active">⚔️ Equipo</a>
     <a href="minijuego.html" class="nav-link">🎮 ¿Quién es?</a>
@@ -90,14 +90,13 @@
   <div class="grid-team" id="teamContainer"></div>
 
   <script>
-    // Tu equipo completo exacto con Gliscor, Gengar, Darkrai, Mimikyu, Metagross y Glalie
     const team = [
-      { id: 472, moves: ['Earthquake', 'Toxic', 'Protect', 'Substitute'] },          // Gliscor
-      { id: 94,  moves: ['Shadow Ball', 'Sludge Bomb', 'Focus Blast', 'Will-O-Wisp'] }, // Gengar
-      { id: 491, moves: ['Dark Pulse', 'Nasty Plot', 'Ice Beam', 'Focus Blast'] },    // Darkrai
-      { id: 778, moves: ['Play Rough', 'Shadow Sneak', 'Swords Dance', 'Drain Punch'] },// Mimikyu
-      { id: 376, moves: ['Meteor Mash', 'Zen Headbutt', 'Earthquake', 'Bullet Punch'] },// Metagross
-      { id: 362, moves: ['Ice Beam', 'Shadow Ball', 'Spikes', 'Explosion'] }            // Glalie
+      { id: 472, moves: ['Earthquake', 'Toxic', 'Protect', 'Substitute'] },
+      { id: 94,  moves: ['Shadow Ball', 'Sludge Bomb', 'Focus Blast', 'Will-O-Wisp'] },
+      { id: 491, moves: ['Dark Pulse', 'Nasty Plot', 'Ice Beam', 'Focus Blast'] },
+      { id: 778, moves: ['Play Rough', 'Shadow Sneak', 'Swords Dance', 'Drain Punch'] },
+      { id: 376, moves: ['Meteor Mash', 'Zen Headbutt', 'Earthquake', 'Bullet Punch'] },
+      { id: 362, moves: ['Ice Beam', 'Shadow Ball', 'Spikes', 'Explosion'] }
     ];
 
     const teamContainer = document.getElementById('teamContainer');
@@ -115,8 +114,13 @@
         const def = data.stats.find(s => s.stat.name === 'defense').base_stat;
         const spd = data.stats.find(s => s.stat.name === 'speed').base_stat;
 
+        // URLs de los GIF animados (Showdown)
+        const nameShowdown = data.name.toLowerCase();
+        const animNormal = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/${data.id}.gif`;
+        const animShiny = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/shiny/${data.id}.gif`;
+
         const typesHtml = data.types.map(t => `<span class="type-badge type-${t.type.name}">${t.type.name}</span>`).join('');
-        const movesHtml = p.moves.map(m => `<div class="move-item"><span>${m}</span><span>⚔️</span></div>`).join('');
+        const movesHtml = p.moves.map(m => `<div class="move-item"><span>${m}</span><span>⚔️️</span></div>`).join('');
 
         cardScene.innerHTML = `
           <div class="card" onclick="this.classList.toggle('is-flipped')">
@@ -127,7 +131,7 @@
                   <span class="hp-badge">HP ${hp}</span>
                 </div>
                 <div class="poke-img-box">
-                  <img class="poke-img" id="img-${data.id}" src="${data.sprites.other['official-artwork'].front_default}" alt="${data.name}">
+                  <img class="poke-img" id="img-${data.id}" src="${animNormal}" alt="${data.name}">
                 </div>
                 <div class="types">${typesHtml}</div>
               </div>
@@ -138,7 +142,7 @@
               </div>
               <div class="controls-bar" onclick="event.stopPropagation()">
                 <button class="btn-action" title="Grito Pokémon" onclick="playCry(${data.id})">🔊</button>
-                <button class="btn-action" id="shiny-btn-${data.id}" title="Versión Shiny" onclick="toggleShiny(${data.id}, '${data.sprites.other['official-artwork'].front_default}', '${data.sprites.other['official-artwork'].front_shiny}')">✨</button>
+                <button class="btn-action" id="shiny-btn-${data.id}" title="Versión Shiny" onclick="toggleShiny(${data.id}, '${animNormal}', '${animShiny}')">✨</button>
               </div>
             </div>
             <div class="card-face card-back">
