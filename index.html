@@ -7,67 +7,18 @@
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
-      min-height: 100vh; padding: 40px 20px;
+      min-height: 100vh; padding: 20px 10px;
       display: flex; flex-direction: column; align-items: center;
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; color: #fff;
       background: linear-gradient(rgba(0,0,0,0.85), rgba(0,0,0,0.85)), 
                   url('https://images.unsplash.com/photo-1506703719100-a0f3a48c0f86?q=80&w=1920&auto=format&fit=crop');
       background-size: cover; background-position: center; background-attachment: fixed;
     }
-    .nav-bar { display: flex; gap: 10px; background: rgba(15, 15, 30, 0.85); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.15); padding: 10px 18px; border-radius: 30px; margin-bottom: 25px; flex-wrap: wrap; justify-content: center; }
+    .nav-bar { display: flex; gap: 10px; background: rgba(15, 15, 30, 0.85); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.15); padding: 10px 18px; border-radius: 30px; margin-bottom: 20px; flex-wrap: wrap; justify-content: center; }
     .nav-link { color: #a0a0d0; text-decoration: none; font-weight: bold; padding: 8px 14px; border-radius: 18px; transition: 0.3s; font-size: 0.85rem; }
     .nav-link:hover { color: #fff; background: rgba(255,255,255,0.1); }
     .nav-link.active { color: #000; background: linear-gradient(135deg, #ffd700, #ff8c00); }
-
-    .header-container { text-align: center; margin-bottom: 30px; }
-    h1 { font-size: 2.2rem; background: linear-gradient(135deg, #ffd700, #ff8c00); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-shadow: 0 5px 15px rgba(0,0,0,0.5); margin-bottom: 8px; }
-    .subtitle { color: #a0a0d0; font-weight: 500; font-size: 0.95rem; }
-
-    .grid-team { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 25px; width: 100%; max-width: 1200px; }
-
-    .card-scene { perspective: 1000px; height: 480px; }
-    .card { width: 100%; height: 100%; position: relative; transform-style: preserve-3d; transition: transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275); cursor: pointer; }
-    .card.is-flipped { transform: rotateY(180deg); }
-
-    .card-face { position: absolute; width: 100%; height: 100%; backface-visibility: hidden; border-radius: 20px; border: 1px solid rgba(255, 255, 255, 0.15); background: rgba(20, 20, 35, 0.75); backdrop-filter: blur(12px); box-shadow: 0 15px 35px rgba(0,0,0,0.6); padding: 20px; display: flex; flex-direction: column; justify-content: space-between; }
-    
-    .card-back { transform: rotateY(180deg); background: rgba(15, 15, 25, 0.92); }
-
-    .card-header { display: flex; justify-content: space-between; align-items: center; }
-    .poke-name { font-size: 1.4rem; font-weight: bold; text-transform: capitalize; }
-    .hp-badge { font-weight: bold; color: #4CAF50; background: rgba(76, 175, 80, 0.15); padding: 3px 8px; border-radius: 10px; border: 1px solid rgba(76, 175, 80, 0.3); font-size: 0.85rem; }
-
-    .poke-img-box { position: relative; width: 100%; height: 170px; display: flex; justify-content: center; align-items: center; margin: 10px 0; }
-    .poke-img-box::before { content: ''; position: absolute; width: 130px; height: 130px; background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, rgba(0,0,0,0) 70%); border-radius: 50%; }
-    .poke-img { height: 120px; z-index: 2; filter: drop-shadow(0 10px 15px rgba(0,0,0,0.5)); transition: transform 0.3s; image-rendering: pixelated; }
-    .card:hover .poke-img { transform: scale(1.15); }
-
-    .types { display: flex; gap: 8px; justify-content: center; margin-bottom: 10px; }
-    .type-badge { padding: 4px 12px; border-radius: 12px; font-size: 0.75rem; font-weight: bold; text-transform: uppercase; border: 1px solid rgba(255,255,255,0.2); }
-
-    .stats { display: flex; flex-direction: column; gap: 6px; }
-    .stat-row { display: flex; align-items: center; font-size: 0.75rem; }
-    .stat-name { width: 50px; font-weight: bold; color: #aaa; }
-    .stat-val { width: 30px; text-align: right; padding-right: 8px; font-weight: bold; }
-    .bar-bg { flex: 1; height: 6px; background: rgba(255,255,255,0.1); border-radius: 3px; overflow: hidden; }
-    .bar-fill { height: 100%; border-radius: 3px; }
-
-    .hp { background: #4CAF50; } .atk { background: #F44336; } .def { background: #2196F3; } .spd { background: #FFEB3B; }
-
-    .moves-title { font-size: 1rem; color: #ffd700; margin-bottom: 12px; text-align: center; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 6px; }
-    .moves-list { display: flex; flex-direction: column; gap: 8px; }
-    .move-item { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); padding: 8px 12px; border-radius: 8px; font-size: 0.85rem; font-weight: 500; display: flex; justify-content: space-between; align-items: center; }
-
-    .controls-bar { margin-top: 15px; display: flex; justify-content: space-between; align-items: center; }
-    .btn-action { background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); color: #fff; border-radius: 50%; width: 34px; height: 34px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: 0.2s; font-size: 0.9rem; }
-    .btn-action:hover { background: rgba(255,255,255,0.25); transform: scale(1.1); }
-    .btn-action.active { background: #ffd700; color: #000; }
-    
-    .type-ground { background: #E0C068; color: #000; } .type-flying { background: #A890F0; }
-    .type-ghost { background: #705898; } .type-poison { background: #A040A0; }
-    .type-dark { background: #705848; } .type-ice { background: #98D8D8; color: #000; }
-    .type-steel { background: #B8B8D0; color: #000; } .type-psychic { background: #F85888; }
-    .type-fairy { background: #EE99AC; color: #000; }
+    .main-container { width: 100%; max-width: 950px; background: rgba(18, 18, 30, 0.92); border: 1px solid rgba(255,255,255,0.15); border-radius: 16px; padding: 20px; box-shadow: 0 15px 35px rgba(0,0,0,0.7); text-align: center; }
   </style>
 </head>
 <body>
@@ -77,102 +28,13 @@
     <a href="minijuego.html" class="nav-link">🎮 ¿Quién es?</a>
     <a href="pokedle.html" class="nav-link">🧩 Pokedle</a>
     <a href="typematchup.html" class="nav-link">⚡ Type Matchup</a>
+    <a href="batalla.html" class="nav-link">⚔️ Combate</a>
   </nav>
 
-  <div class="header-container">
-    <h1>⚔️ Mi Equipo Pokémon Competitivo</h1>
-    <p class="subtitle">Haz clic en cualquier tarjeta para girarla y ver sus movimientos</p>
+  <div class="main-container">
+    <h1 style="color: #ffd700; margin-bottom: 10px;">🛡️ Creador de Equipos</h1>
+    <p style="color: #aaa;">Página principal del equipo Pokémon.</p>
   </div>
 
-  <div class="grid-team" id="teamContainer"></div>
-
-  <script>
-    // TU EQUIPO REAL RESTAURADO
-    const team = [
-      { id: 472, moves: ['Earthquake', 'Toxic', 'Protect', 'Roost'] },       // Gliscor
-      { id: 94,  moves: ['Shadow Ball', 'Sludge Bomb', 'Focus Blast', 'Will-O-Wisp'] }, // Gengar
-      { id: 491, moves: ['Dark Void', 'Dark Pulse', 'Nasty Plot', 'Dream Eater'] }, // Darkrai
-      { id: 362, moves: ['Ice Beam', 'Spikes', 'Freeze-Dry', 'Explosion'] },    // Glalie
-      { id: 376, moves: ['Meteor Mash', 'Zen Headbutt', 'Bullet Punch', 'Earthquake'] }, // Metagross
-      { id: 778, moves: ['Swords Dance', 'Play Rough', 'Shadow Sneak', 'Drain Punch'] }  // Mimikyu
-    ];
-
-    const teamContainer = document.getElementById('teamContainer');
-
-    async function loadTeam() {
-      for (const p of team) {
-        const res = await fetch(`https://pokeapi.co/api/v2/pokemon/${p.id}`);
-        const data = await res.json();
-        
-        const cardScene = document.createElement('div');
-        cardScene.className = 'card-scene';
-
-        const hp = data.stats.find(s => s.stat.name === 'hp').base_stat;
-        const atk = data.stats.find(s => s.stat.name === 'attack').base_stat;
-        const def = data.stats.find(s => s.stat.name === 'defense').base_stat;
-        const spd = data.stats.find(s => s.stat.name === 'speed').base_stat;
-
-        const defaultGif = data.sprites.other.showdown.front_default || data.sprites.front_default;
-        const shinyGif = data.sprites.other.showdown.front_shiny || data.sprites.front_shiny;
-
-        const typesHtml = data.types.map(t => `<span class="type-badge type-${t.type.name}">${t.type.name}</span>`).join('');
-        const movesHtml = p.moves.map(m => `<div class="move-item"><span>${m}</span><span>⚔️</span></div>`).join('');
-
-        cardScene.innerHTML = `
-          <div class="card" onclick="this.classList.toggle('is-flipped')">
-            <div class="card-face">
-              <div>
-                <div class="card-header">
-                  <span class="poke-name">${data.name}</span>
-                  <span class="hp-badge">HP ${hp}</span>
-                </div>
-                <div class="poke-img-box">
-                  <img class="poke-img" id="img-${data.id}" src="${defaultGif}" alt="${data.name}">
-                </div>
-                <div class="types">${typesHtml}</div>
-              </div>
-              <div class="stats">
-                <div class="stat-row"><span class="stat-name">ATK</span><span class="stat-val">${atk}</span><div class="bar-bg"><div class="bar-fill atk" style="width: ${Math.min(100, (atk/180)*100)}%"></div></div></div>
-                <div class="stat-row"><span class="stat-name">DEF</span><span class="stat-val">${def}</span><div class="bar-bg"><div class="bar-fill def" style="width: ${Math.min(100, (def/180)*100)}%"></div></div></div>
-                <div class="stat-row"><span class="stat-name">SPD</span><span class="stat-val">${spd}</span><div class="bar-bg"><div class="bar-fill spd" style="width: ${Math.min(100, (spd/180)*100)}%"></div></div></div>
-              </div>
-              <div class="controls-bar" onclick="event.stopPropagation()">
-                <button class="btn-action" title="Grito Pokémon" onclick="playCry(${data.id})">🔊</button>
-                <button class="btn-action" id="shiny-btn-${data.id}" title="Versión Shiny" onclick="toggleShiny(${data.id}, '${defaultGif}', '${shinyGif}')">✨</button>
-              </div>
-            </div>
-            <div class="card-face card-back">
-              <div>
-                <div class="moves-title">Set de Movimientos</div>
-                <div class="moves-list">${movesHtml}</div>
-              </div>
-              <p style="text-align: center; color: #888; font-size: 0.75rem;">Haz clic para volver al frente</p>
-            </div>
-          </div>
-        `;
-        teamContainer.appendChild(cardScene);
-      }
-    }
-
-    function playCry(id) {
-      const audio = new Audio(`https://raw.githubusercontent.com/PokeAPI/cries/main/cries/pokemon/latest/${id}.ogg`);
-      audio.volume = 0.4;
-      audio.play().catch(() => {});
-    }
-
-    function toggleShiny(id, defaultImg, shinyImg) {
-      const img = document.getElementById(`img-${id}`);
-      const btn = document.getElementById(`shiny-btn-${id}`);
-      if (img.src === shinyImg) {
-        img.src = defaultImg;
-        btn.classList.remove('active');
-      } else {
-        img.src = shinyImg;
-        btn.classList.add('active');
-      }
-    }
-
-    loadTeam();
-  </script>
 </body>
 </html>
