@@ -109,6 +109,7 @@
   </div>
 
   <script>
+    const DEFAULT_TEAM_NAMES = ['gliscor', 'gengar', 'mimikyu', 'metagross', 'darkrai', 'glalie'];
     let team = JSON.parse(localStorage.getItem('myPokeTeam')) || [];
 
     async function fetchPokemon(query) {
@@ -118,6 +119,35 @@
         return await response.json();
       } catch (err) {
         return null;
+      }
+    }
+
+    async function loadDefaultTeamIfEmpty() {
+      if (team.length === 0) {
+        for (const name of DEFAULT_TEAM_NAMES) {
+          const data = await fetchPokemon(name);
+          if (data) {
+            const animFront = data.sprites.versions?.['generation-v']?.['black-white']?.animated?.front_default || data.sprites.front_default;
+            const animBack = data.sprites.versions?.['generation-v']?.['black-white']?.animated?.back_default || data.sprites.back_default || animFront;
+            const animShinyFront = data.sprites.versions?.['generation-v']?.['black-white']?.animated?.front_shiny || data.sprites.front_shiny || animFront;
+            const animShinyBack = data.sprites.versions?.['generation-v']?.['black-white']?.animated?.back_shiny || data.sprites.back_shiny || animBack;
+            const allMoves = data.moves.map(m => m.move.name);
+
+            team.push({
+              id: data.id,
+              name: data.name,
+              isShiny: false,
+              sprites: { front: animFront, back: animBack, shinyFront: animShinyFront, shinyBack: animShinyBack },
+              types: data.types.map(t => t.type.name),
+              stats: data.stats.map(s => ({ name: s.stat.name, base: s.base_stat })),
+              ivs: { hp: 31, attack: 31, defense: 31, 'special-attack': 31, 'special-defense': 31, speed: 31 },
+              allAvailableMoves: allMoves,
+              selectedMoves: allMoves.slice(0, 4)
+            });
+          }
+        }
+        saveTeam();
+        renderTeam();
       }
     }
 
@@ -137,39 +167,25 @@
         return;
       }
 
-      // Sprites Normales Animados (Gen 5 / Showdown) + Estáticos de respaldo
-      const animFront = data.sprites.versions?.['generation-v']?.['black-white']?.animated?.front_default 
-                      || data.sprites.front_default;
-      const animBack = data.sprites.versions?.['generation-v']?.['black-white']?.animated?.back_default 
-                     || data.sprites.back_default || animFront;
-
-      // Sprites Shiny Animados + Estáticos
-      const animShinyFront = data.sprites.versions?.['generation-v']?.['black-white']?.animated?.front_shiny 
-                           || data.sprites.front_shiny || animFront;
-      const animShinyBack = data.sprites.versions?.['generation-v']?.['black-white']?.animated?.back_shiny 
-                          || data.sprites.back_shiny || animBack;
+      const animFront = data.sprites.versions?.['generation-v']?.['black-white']?.animated?.front_default || data.sprites.front_default;
+      const animBack = data.sprites.versions?.['generation-v']?.['black-white']?.animated?.back_default || data.sprites.back_default || animFront;
+      const animShinyFront = data.sprites.versions?.['generation-v']?.['black-white']?.animated?.front_shiny || data.sprites.front_shiny || animFront;
+      const animShinyBack = data.sprites.versions?.['generation-v']?.['black-white']?.animated?.back_shiny || data.sprites.back_shiny || animBack;
 
       const allMoves = data.moves.map(m => m.move.name);
-      const initialMoves = allMoves.slice(0, 4);
 
-      const pokeObj = {
+      team.push({
         id: data.id,
         name: data.name,
         isShiny: false,
-        sprites: {
-          front: animFront,
-          back: animBack,
-          shinyFront: animShinyFront,
-          shinyBack: animShinyBack
-        },
+        sprites: { front: animFront, back: animBack, shinyFront: animShinyFront, shinyBack: animShinyBack },
         types: data.types.map(t => t.type.name),
         stats: data.stats.map(s => ({ name: s.stat.name, base: s.base_stat })),
         ivs: { hp: 31, attack: 31, defense: 31, 'special-attack': 31, 'special-defense': 31, speed: 31 },
         allAvailableMoves: allMoves,
-        selectedMoves: initialMoves
-      };
+        selectedMoves: allMoves.slice(0, 4)
+      });
 
-      team.push(pokeObj);
       saveTeam();
       renderTeam();
       input.value = '';
@@ -220,4 +236,10 @@
 
           const statsHTML = poke.stats.map(s => {
             const shortName = s.name.replace('special-attack', 'SpA').replace('special-defense', 'SpD').replace('attack', 'Atk').replace('defense', 'Def').replace('speed', 'Spe').toUpperCase();
-            const ivVal = (poke.ivs && poke.ivs[s.name] !== undefined)
+            const ivVal = (poke.ivs && poke.ivs[s.name] !== undefined) ? poke.ivs[s.name] : 31;
+            const percentage = Math.min(100, (s.base / 150) * 100);
+
+            return `
+              <div class="stat-row">
+                <span>${shortName}${s.base}</span>
+                <div class="stat-bar-bg
