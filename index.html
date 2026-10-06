@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>91Adrian91 | Trainer Card</title>
+  <title>91Adrian91 | Master Trainer Card</title>
   <style>
     body {
       margin: 0;
@@ -15,14 +15,14 @@
       align-items: center;
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       color: #ffffff;
-      background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), 
+      background: linear-gradient(rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0.75)), 
                   url('https://images.unsplash.com/photo-1506703719100-a0f3a48c0f86?q=80&w=1920&auto=format&fit=crop');
       background-size: cover;
       background-position: center;
       background-attachment: fixed;
     }
 
-    /* Cabecera / Perfil */
+    /* Cabecera y Controles */
     .header-profile {
       text-align: center;
       margin-bottom: 25px;
@@ -44,83 +44,116 @@
       margin-top: 5px;
     }
 
-    /* Botón Shiny */
-    .shiny-btn {
+    .controls-bar {
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+      margin-top: 15px;
+      flex-wrap: wrap;
+    }
+
+    .btn-action {
       background: linear-gradient(135deg, #ffd700, #ff8c00);
       border: none;
       color: #000;
       font-weight: bold;
-      padding: 10px 20px;
+      padding: 10px 18px;
       border-radius: 20px;
       cursor: pointer;
-      font-size: 0.9rem;
-      margin-top: 15px;
-      box-shadow: 0 0 15px rgba(255, 215, 0, 0.4);
+      font-size: 0.85rem;
+      box-shadow: 0 0 15px rgba(255, 215, 0, 0.3);
       transition: transform 0.2s, box-shadow 0.2s;
     }
 
-    .shiny-btn:hover {
+    .btn-action:hover {
       transform: scale(1.05);
-      box-shadow: 0 0 25px rgba(255, 215, 0, 0.7);
+      box-shadow: 0 0 22px rgba(255, 215, 0, 0.6);
     }
 
-    /* Grid */
+    .btn-music {
+      background: linear-gradient(135deg, #a040a0, #705898);
+      color: #fff;
+      box-shadow: 0 0 15px rgba(160, 64, 160, 0.4);
+    }
+
+    /* Grid principal */
     .grid-container {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
       gap: 25px;
-      max-width: 950px;
+      max-width: 980px;
       width: 100%;
     }
 
-    /* Tarjeta Pokémon */
+    /* Contenedor Flip 3D */
+    .card-wrapper {
+      perspective: 1000px;
+      height: 420px;
+    }
+
     .pokemon-card {
-      background: rgba(20, 20, 35, 0.8);
+      width: 100%;
+      height: 100%;
+      position: relative;
+      transform-style: preserve-3d;
+      transition: transform 0.6s cubic-bezier(0.4, 0.2, 0.2, 1);
+    }
+
+    .card-wrapper.flipped .pokemon-card {
+      transform: rotateY(180deg);
+    }
+
+    .card-front, .card-back {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      backface-visibility: hidden;
+      border-radius: 20px;
+      background: rgba(20, 20, 35, 0.85);
       backdrop-filter: blur(12px);
       border: 1px solid rgba(255, 255, 255, 0.15);
-      border-radius: 20px;
-      padding: 25px 20px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.7);
+      box-sizing: border-box;
+      padding: 20px;
       display: flex;
       flex-direction: column;
       align-items: center;
-      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.7);
-      cursor: pointer;
-      position: relative;
-      transition: transform 0.3s ease, border-color 0.3s ease;
     }
 
-    .pokemon-card:hover {
-      transform: translateY(-8px);
-      border-color: rgba(180, 140, 255, 0.5);
+    .card-back {
+      transform: rotateY(180deg);
+      justify-content: space-between;
+      text-align: left;
     }
 
-    .pokemon-card.attack {
+    /* Animación de ataque */
+    .card-wrapper.attack .card-front {
       animation: attackAnim 0.5s ease-in-out;
     }
 
     @keyframes attackAnim {
       0% { transform: scale(1); }
-      30% { transform: scale(1.1) translateY(-10px); }
+      30% { transform: scale(1.08) translateY(-10px); filter: brightness(1.3); }
       100% { transform: scale(1); }
     }
 
     .pokemon-name {
-      margin: 0 0 10px 0;
-      font-size: 1.6rem;
+      margin: 0 0 8px 0;
+      font-size: 1.5rem;
       color: #ffffff;
     }
 
     /* Badges de Tipos */
     .types-container {
       display: flex;
-      gap: 8px;
-      margin-bottom: 15px;
+      gap: 6px;
+      margin-bottom: 10px;
     }
 
     .type-badge {
-      padding: 4px 10px;
-      border-radius: 12px;
-      font-size: 0.75rem;
+      padding: 3px 8px;
+      border-radius: 10px;
+      font-size: 0.7rem;
       font-weight: bold;
       text-transform: uppercase;
     }
@@ -136,41 +169,102 @@
     .fairy  { background-color: #EE99AC; color: #000; }
 
     .pokemon-animated {
-      height: 120px;
+      height: 110px;
       width: auto;
       object-fit: contain;
       image-rendering: pixelated;
       filter: drop-shadow(0 8px 12px rgba(0, 0, 0, 0.8));
-      margin-bottom: 15px;
+      margin-bottom: 10px;
     }
 
-    /* Mini Barra de Stats */
+    /* Stats */
     .stats-container {
       width: 100%;
-      margin-top: 10px;
-      font-size: 0.75rem;
-      color: #aaa;
+      font-size: 0.7rem;
+      font-weight: 600;
     }
 
     .stat-row {
       display: flex;
       align-items: center;
       gap: 8px;
-      margin-bottom: 4px;
+      margin-bottom: 5px;
+    }
+
+    .stat-label {
+      width: 30px;
+      color: #a0a0c0;
     }
 
     .stat-bar-bg {
       flex-grow: 1;
       height: 6px;
-      background: rgba(255, 255, 255, 0.1);
-      border-radius: 3px;
+      background: rgba(255, 255, 255, 0.08);
+      border-radius: 4px;
       overflow: hidden;
     }
 
     .stat-bar-fill {
       height: 100%;
-      background: #c8b6ff;
-      border-radius: 3px;
+      border-radius: 4px;
+    }
+
+    .hp  { background: #4CAF50; box-shadow: 0 0 6px rgba(76, 175, 80, 0.6); }
+    .atk { background: #FF5722; box-shadow: 0 0 6px rgba(255, 87, 34, 0.6); }
+    .def { background: #2196F3; box-shadow: 0 0 6px rgba(33, 150, 243, 0.6); }
+    .spd { background: #FFEB3B; box-shadow: 0 0 6px rgba(255, 235, 59, 0.6); }
+
+    .btn-flip {
+      margin-top: auto;
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      color: #ccc;
+      padding: 5px 12px;
+      border-radius: 12px;
+      cursor: pointer;
+      font-size: 0.75rem;
+      transition: background 0.2s;
+    }
+
+    .btn-flip:hover {
+      background: rgba(255, 255, 255, 0.25);
+      color: #fff;
+    }
+
+    /* Diseño del Reverso */
+    .back-title {
+      font-size: 1.1rem;
+      color: #c8b6ff;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      width: 100%;
+      padding-bottom: 5px;
+      margin-bottom: 10px;
+    }
+
+    .info-section {
+      width: 100%;
+      font-size: 0.8rem;
+    }
+
+    .info-section strong {
+      color: #ffd700;
+    }
+
+    .moves-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6px;
+      width: 100%;
+      margin-top: 8px;
+    }
+
+    .move-item {
+      background: rgba(255, 255, 255, 0.05);
+      padding: 5px 8px;
+      border-radius: 8px;
+      font-size: 0.72rem;
+      text-align: center;
+      border: 1px solid rgba(255, 255, 255, 0.08);
     }
   </style>
 </head>
@@ -179,102 +273,225 @@
   <div class="header-profile">
     <h1>91Adrian91</h1>
     <div class="trainer-subtitle">Master Pokémon Team</div>
-    <button class="shiny-btn" onclick="toggleShiny()">✨ Modo Shiny / Variocolor</button>
+    <div class="controls-bar">
+      <button class="btn-action" onclick="toggleShiny()">✨ Modo Shiny</button>
+      <button class="btn-action btn-music" id="bgmBtn" onclick="toggleMusic()">🎵 Música: OFF</button>
+    </div>
   </div>
 
   <div class="grid-container">
 
     <!-- Gliscor -->
-    <div class="pokemon-card" onclick="playCry(472, this)">
-      <h2 class="pokemon-name">Gliscor</h2>
-      <div class="types-container">
-        <span class="type-badge ground">Tierra</span>
-        <span class="type-badge flying">Volador</span>
-      </div>
-      <img class="pokemon-animated" id="poke-472" src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/472.gif" alt="Gliscor">
-      
-      <div class="stats-container">
-        <div class="stat-row"><span>HP</span><div class="stat-bar-bg"><div class="stat-bar-fill" style="width: 75%;"></div></div></div>
-        <div class="stat-row"><span>ATK</span><div class="stat-bar-bg"><div class="stat-bar-fill" style="width: 85%;"></div></div></div>
-        <div class="stat-row"><span>DEF</span><div class="stat-bar-bg"><div class="stat-bar-fill" style="width: 95%;"></div></div></div>
+    <div class="card-wrapper" id="card-472">
+      <div class="pokemon-card">
+        <div class="card-front" onclick="playCry(472, 'card-472')">
+          <h2 class="pokemon-name">Gliscor</h2>
+          <div class="types-container">
+            <span class="type-badge ground">Tierra</span>
+            <span class="type-badge flying">Volador</span>
+          </div>
+          <img class="pokemon-animated" id="poke-472" src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/472.gif" alt="Gliscor">
+          <div class="stats-container">
+            <div class="stat-row"><span class="stat-label">HP</span><div class="stat-bar-bg"><div class="stat-bar-fill hp" style="width: 75%;"></div></div></div>
+            <div class="stat-row"><span class="stat-label">ATK</span><div class="stat-bar-bg"><div class="stat-bar-fill atk" style="width: 85%;"></div></div></div>
+            <div class="stat-row"><span class="stat-label">DEF</span><div class="stat-bar-bg"><div class="stat-bar-fill def" style="width: 95%;"></div></div></div>
+            <div class="stat-row"><span class="stat-label">SPD</span><div class="stat-bar-bg"><div class="stat-bar-fill spd" style="width: 80%;"></div></div></div>
+          </div>
+          <button class="btn-flip" onclick="event.stopPropagation(); toggleFlip('card-472')">🔍 Ver Datos</button>
+        </div>
+        <div class="card-back">
+          <div class="back-title">Gliscor - Datos Combate</div>
+          <div class="info-section">
+            <p><strong>Habilidad:</strong> Poison Heal</p>
+            <p><strong>Objeto:</strong> Toxic Orb</p>
+            <p><strong>Debilidades:</strong> Hielo (x4), Agua</p>
+          </div>
+          <div class="moves-grid">
+            <div class="move-item">Earthquake</div>
+            <div class="move-item">Toxic</div>
+            <div class="move-item">Protect</div>
+            <div class="move-item">Roost</div>
+          </div>
+          <button class="btn-flip" onclick="toggleFlip('card-472')">↩️ Volver</button>
+        </div>
       </div>
     </div>
 
     <!-- Gengar -->
-    <div class="pokemon-card" onclick="playCry(94, this)">
-      <h2 class="pokemon-name">Gengar</h2>
-      <div class="types-container">
-        <span class="type-badge ghost">Fantasma</span>
-        <span class="type-badge poison">Veneno</span>
-      </div>
-      <img class="pokemon-animated" id="poke-94" src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/94.gif" alt="Gengar">
-      
-      <div class="stats-container">
-        <div class="stat-row"><span>HP</span><div class="stat-bar-bg"><div class="stat-bar-fill" style="width: 60%;"></div></div></div>
-        <div class="stat-row"><span>ATK</span><div class="stat-bar-bg"><div class="stat-bar-fill" style="width: 90%;"></div></div></div>
-        <div class="stat-row"><span>SPD</span><div class="stat-bar-bg"><div class="stat-bar-fill" style="width: 88%;"></div></div></div>
+    <div class="card-wrapper" id="card-94">
+      <div class="pokemon-card">
+        <div class="card-front" onclick="playCry(94, 'card-94')">
+          <h2 class="pokemon-name">Gengar</h2>
+          <div class="types-container">
+            <span class="type-badge ghost">Fantasma</span>
+            <span class="type-badge poison">Veneno</span>
+          </div>
+          <img class="pokemon-animated" id="poke-94" src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/94.gif" alt="Gengar">
+          <div class="stats-container">
+            <div class="stat-row"><span class="stat-label">HP</span><div class="stat-bar-bg"><div class="stat-bar-fill hp" style="width: 60%;"></div></div></div>
+            <div class="stat-row"><span class="stat-label">ATK</span><div class="stat-bar-bg"><div class="stat-bar-fill atk" style="width: 90%;"></div></div></div>
+            <div class="stat-row"><span class="stat-label">DEF</span><div class="stat-bar-bg"><div class="stat-bar-fill def" style="width: 60%;"></div></div></div>
+            <div class="stat-row"><span class="stat-label">SPD</span><div class="stat-bar-bg"><div class="stat-bar-fill spd" style="width: 95%;"></div></div></div>
+          </div>
+          <button class="btn-flip" onclick="event.stopPropagation(); toggleFlip('card-94')">🔍 Ver Datos</button>
+        </div>
+        <div class="card-back">
+          <div class="back-title">Gengar - Datos Combate</div>
+          <div class="info-section">
+            <p><strong>Habilidad:</strong> Cursed Body</p>
+            <p><strong>Objeto:</strong> Life Orb</p>
+            <p><strong>Debilidades:</strong> Siniestro, Fantasma, Psíquico</p>
+          </div>
+          <div class="moves-grid">
+            <div class="move-item">Shadow Ball</div>
+            <div class="move-item">Sludge Bomb</div>
+            <div class="move-item">Focus Blast</div>
+            <div class="move-item">Will-O-Wisp</div>
+          </div>
+          <button class="btn-flip" onclick="toggleFlip('card-94')">↩️ Volver</button>
+        </div>
       </div>
     </div>
 
     <!-- Darkrai -->
-    <div class="pokemon-card" onclick="playCry(491, this)">
-      <h2 class="pokemon-name">Darkrai</h2>
-      <div class="types-container">
-        <span class="type-badge dark">Siniestro</span>
-      </div>
-      <img class="pokemon-animated" id="poke-491" src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/491.gif" alt="Darkrai">
-      
-      <div class="stats-container">
-        <div class="stat-row"><span>HP</span><div class="stat-bar-bg"><div class="stat-bar-fill" style="width: 70%;"></div></div></div>
-        <div class="stat-row"><span>ATK</span><div class="stat-bar-bg"><div class="stat-bar-fill" style="width: 95%;"></div></div></div>
-        <div class="stat-row"><span>SPD</span><div class="stat-bar-bg"><div class="stat-bar-fill" style="width: 92%;"></div></div></div>
+    <div class="card-wrapper" id="card-491">
+      <div class="pokemon-card">
+        <div class="card-front" onclick="playCry(491, 'card-491')">
+          <h2 class="pokemon-name">Darkrai</h2>
+          <div class="types-container">
+            <span class="type-badge dark">Siniestro</span>
+          </div>
+          <img class="pokemon-animated" id="poke-491" src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/491.gif" alt="Darkrai">
+          <div class="stats-container">
+            <div class="stat-row"><span class="stat-label">HP</span><div class="stat-bar-bg"><div class="stat-bar-fill hp" style="width: 70%;"></div></div></div>
+            <div class="stat-row"><span class="stat-label">ATK</span><div class="stat-bar-bg"><div class="stat-bar-fill atk" style="width: 95%;"></div></div></div>
+            <div class="stat-row"><span class="stat-label">DEF</span><div class="stat-bar-bg"><div class="stat-bar-fill def" style="width: 75%;"></div></div></div>
+            <div class="stat-row"><span class="stat-label">SPD</span><div class="stat-bar-bg"><div class="stat-bar-fill spd" style="width: 92%;"></div></div></div>
+          </div>
+          <button class="btn-flip" onclick="event.stopPropagation(); toggleFlip('card-491')">🔍 Ver Datos</button>
+        </div>
+        <div class="card-back">
+          <div class="back-title">Darkrai - Datos Combate</div>
+          <div class="info-section">
+            <p><strong>Habilidad:</strong> Bad Dreams</p>
+            <p><strong>Objeto:</strong> Leftovers</p>
+            <p><strong>Debilidades:</strong> Lucha, Bicho, Hada</p>
+          </div>
+          <div class="moves-grid">
+            <div class="move-item">Dark Void</div>
+            <div class="move-item">Dark Pulse</div>
+            <div class="move-item">Nasty Plot</div>
+            <div class="move-item">Dream Eater</div>
+          </div>
+          <button class="btn-flip" onclick="toggleFlip('card-491')">↩️ Volver</button>
+        </div>
       </div>
     </div>
 
     <!-- Glalie -->
-    <div class="pokemon-card" onclick="playCry(362, this)">
-      <h2 class="pokemon-name">Glalie</h2>
-      <div class="types-container">
-        <span class="type-badge ice">Hielo</span>
-      </div>
-      <img class="pokemon-animated" id="poke-362" src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/362.gif" alt="Glalie">
-      
-      <div class="stats-container">
-        <div class="stat-row"><span>HP</span><div class="stat-bar-bg"><div class="stat-bar-fill" style="width: 80%;"></div></div></div>
-        <div class="stat-row"><span>DEF</span><div class="stat-bar-bg"><div class="stat-bar-fill" style="width: 80%;"></div></div></div>
-        <div class="stat-row"><span>SPD</span><div class="stat-bar-bg"><div class="stat-bar-fill" style="width: 80%;"></div></div></div>
+    <div class="card-wrapper" id="card-362">
+      <div class="pokemon-card">
+        <div class="card-front" onclick="playCry(362, 'card-362')">
+          <h2 class="pokemon-name">Glalie</h2>
+          <div class="types-container">
+            <span class="type-badge ice">Hielo</span>
+          </div>
+          <img class="pokemon-animated" id="poke-362" src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/362.gif" alt="Glalie">
+          <div class="stats-container">
+            <div class="stat-row"><span class="stat-label">HP</span><div class="stat-bar-bg"><div class="stat-bar-fill hp" style="width: 80%;"></div></div></div>
+            <div class="stat-row"><span class="stat-label">ATK</span><div class="stat-bar-bg"><div class="stat-bar-fill atk" style="width: 80%;"></div></div></div>
+            <div class="stat-row"><span class="stat-label">DEF</span><div class="stat-bar-bg"><div class="stat-bar-fill def" style="width: 80%;"></div></div></div>
+            <div class="stat-row"><span class="stat-label">SPD</span><div class="stat-bar-bg"><div class="stat-bar-fill spd" style="width: 80%;"></div></div></div>
+          </div>
+          <button class="btn-flip" onclick="event.stopPropagation(); toggleFlip('card-362')">🔍 Ver Datos</button>
+        </div>
+        <div class="card-back">
+          <div class="back-title">Glalie - Datos Combate</div>
+          <div class="info-section">
+            <p><strong>Habilidad:</strong> Moody</p>
+            <p><strong>Objeto:</strong> Heavy-Duty Boots</p>
+            <p><strong>Debilidades:</strong> Fuego, Lucha, Roca, Acero</p>
+          </div>
+          <div class="moves-grid">
+            <div class="move-item">Ice Beam</div>
+            <div class="move-item">Spikes</div>
+            <div class="move-item">Freeze-Dry</div>
+            <div class="move-item">Explosion</div>
+          </div>
+          <button class="btn-flip" onclick="toggleFlip('card-362')">↩️ Volver</button>
+        </div>
       </div>
     </div>
 
     <!-- Metagross -->
-    <div class="pokemon-card" onclick="playCry(376, this)">
-      <h2 class="pokemon-name">Metagross</h2>
-      <div class="types-container">
-        <span class="type-badge steel">Acero</span>
-        <span class="type-badge psychic">Psíquico</span>
-      </div>
-      <img class="pokemon-animated" id="poke-376" src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/376.gif" alt="Metagross">
-      
-      <div class="stats-container">
-        <div class="stat-row"><span>HP</span><div class="stat-bar-bg"><div class="stat-bar-fill" style="width: 80%;"></div></div></div>
-        <div class="stat-row"><span>ATK</span><div class="stat-bar-bg"><div class="stat-bar-fill" style="width: 95%;"></div></div></div>
-        <div class="stat-row"><span>DEF</span><div class="stat-bar-bg"><div class="stat-bar-fill" style="width: 90%;"></div></div></div>
+    <div class="card-wrapper" id="card-376">
+      <div class="pokemon-card">
+        <div class="card-front" onclick="playCry(376, 'card-376')">
+          <h2 class="pokemon-name">Metagross</h2>
+          <div class="types-container">
+            <span class="type-badge steel">Acero</span>
+            <span class="type-badge psychic">Psíquico</span>
+          </div>
+          <img class="pokemon-animated" id="poke-376" src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/376.gif" alt="Metagross">
+          <div class="stats-container">
+            <div class="stat-row"><span class="stat-label">HP</span><div class="stat-bar-bg"><div class="stat-bar-fill hp" style="width: 80%;"></div></div></div>
+            <div class="stat-row"><span class="stat-label">ATK</span><div class="stat-bar-bg"><div class="stat-bar-fill atk" style="width: 95%;"></div></div></div>
+            <div class="stat-row"><span class="stat-label">DEF</span><div class="stat-bar-bg"><div class="stat-bar-fill def" style="width: 90%;"></div></div></div>
+            <div class="stat-row"><span class="stat-label">SPD</span><div class="stat-bar-bg"><div class="stat-bar-fill spd" style="width: 70%;"></div></div></div>
+          </div>
+          <button class="btn-flip" onclick="event.stopPropagation(); toggleFlip('card-376')">🔍 Ver Datos</button>
+        </div>
+        <div class="card-back">
+          <div class="back-title">Metagross - Datos Combate</div>
+          <div class="info-section">
+            <p><strong>Habilidad:</strong> Clear Body</p>
+            <p><strong>Objeto:</strong> Choice Band</p>
+            <p><strong>Debilidades:</strong> Fuego, Tierra, Siniestro, Fantasma</p>
+          </div>
+          <div class="moves-grid">
+            <div class="move-item">Meteor Mash</div>
+            <div class="move-item">Zen Headbutt</div>
+            <div class="move-item">Bullet Punch</div>
+            <div class="move-item">Earthquake</div>
+          </div>
+          <button class="btn-flip" onclick="toggleFlip('card-376')">↩️ Volver</button>
+        </div>
       </div>
     </div>
 
     <!-- Mimikyu -->
-    <div class="pokemon-card" onclick="playCry(778, this)">
-      <h2 class="pokemon-name">Mimikyu</h2>
-      <div class="types-container">
-        <span class="type-badge ghost">Fantasma</span>
-        <span class="type-badge fairy">Hada</span>
-      </div>
-      <img class="pokemon-animated" id="poke-778" src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/778.gif" alt="Mimikyu">
-      
-      <div class="stats-container">
-        <div class="stat-row"><span>HP</span><div class="stat-bar-bg"><div class="stat-bar-fill" style="width: 55%;"></div></div></div>
-        <div class="stat-row"><span>ATK</span><div class="stat-bar-bg"><div class="stat-bar-fill" style="width: 80%;"></div></div></div>
-        <div class="stat-row"><span>SPD</span><div class="stat-bar-bg"><div class="stat-bar-fill" style="width: 85%;"></div></div></div>
+    <div class="card-wrapper" id="card-778">
+      <div class="pokemon-card">
+        <div class="card-front" onclick="playCry(778, 'card-778')">
+          <h2 class="pokemon-name">Mimikyu</h2>
+          <div class="types-container">
+            <span class="type-badge ghost">Fantasma</span>
+            <span class="type-badge fairy">Hada</span>
+          </div>
+          <img class="pokemon-animated" id="poke-778" src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/778.gif" alt="Mimikyu">
+          <div class="stats-container">
+            <div class="stat-row"><span class="stat-label">HP</span><div class="stat-bar-bg"><div class="stat-bar-fill hp" style="width: 55%;"></div></div></div>
+            <div class="stat-row"><span class="stat-label">ATK</span><div class="stat-bar-bg"><div class="stat-bar-fill atk" style="width: 80%;"></div></div></div>
+            <div class="stat-row"><span class="stat-label">DEF</span><div class="stat-bar-bg"><div class="stat-bar-fill def" style="width: 75%;"></div></div></div>
+            <div class="stat-row"><span class="stat-label">SPD</span><div class="stat-bar-bg"><div class="stat-bar-fill spd" style="width: 85%;"></div></div></div>
+          </div>
+          <button class="btn-flip" onclick="event.stopPropagation(); toggleFlip('card-778')">🔍 Ver Datos</button>
+        </div>
+        <div class="card-back">
+          <div class="back-title">Mimikyu - Datos Combate</div>
+          <div class="info-section">
+            <p><strong>Habilidad:</strong> Disguise</p>
+            <p><strong>Objeto:</strong> Life Orb</p>
+            <p><strong>Debilidades:</strong> Fantasma, Acero</p>
+          </div>
+          <div class="moves-grid">
+            <div class="move-item">Swords Dance</div>
+            <div class="move-item">Play Rough</div>
+            <div class="move-item">Shadow Sneak</div>
+            <div class="move-item">Drain Punch</div>
+          </div>
+          <button class="btn-flip" onclick="toggleFlip('card-778')">↩️️ Volver</button>
+        </div>
       </div>
     </div>
 
@@ -282,24 +499,47 @@
 
   <script>
     let isShiny = false;
+    let isPlayingMusic = false;
     const teamIds = [472, 94, 491, 362, 376, 778];
 
-    // Reproducción de sonido y animación
-    function playCry(id, cardElement) {
+    // Audio BGM de Combate
+    const bgmAudio = new Audio('https://play.pokemonshowdown.com/audio/bgm/bw-champion.mp3');
+    bgmAudio.loop = true;
+    bgmAudio.volume = 0.15;
+
+    function toggleMusic() {
+      const btn = document.getElementById('bgmBtn');
+      if (isPlayingMusic) {
+        bgmAudio.pause();
+        btn.textContent = "🎵 Música: OFF";
+      } else {
+        bgmAudio.play();
+        btn.textContent = "🎵 Música: ON";
+      }
+      isPlayingMusic = !isPlayingMusic;
+    }
+
+    // Reproducir grito oficial y animación
+    function playCry(id, wrapperId) {
       const audio = new Audio(`https://raw.githubusercontent.com/PokeAPI/cries/main/cries/pokemon/latest/${id}.ogg`);
       audio.volume = 0.5;
       audio.play();
 
-      cardElement.classList.remove('attack');
-      void cardElement.offsetWidth;
-      cardElement.classList.add('attack');
+      const wrapper = document.getElementById(wrapperId);
+      wrapper.classList.remove('attack');
+      void wrapper.offsetWidth;
+      wrapper.classList.add('attack');
     }
 
-    // Cambiar entre Normal y Shiny
+    // Giro 3D de la tarjeta
+    function toggleFlip(wrapperId) {
+      const wrapper = document.getElementById(wrapperId);
+      wrapper.classList.toggle('flipped');
+    }
+
+    // Toggle Shiny
     function toggleShiny() {
       isShiny = !isShiny;
-      const path = isShiny ? 'shiny' : 'showdown';
-
       teamIds.forEach(id => {
         const img = document.getElementById(`poke-${id}`);
         img.src = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/${isShiny ? 'shiny/' : ''}${id}.gif`;
