@@ -65,9 +65,9 @@
     
     .type-ground { background: #E0C068; color: #000; } .type-flying { background: #A890F0; }
     .type-ghost { background: #705898; } .type-poison { background: #A040A0; }
-    .type-dark { background: #705848; } .type-electric { background: #F8D030; color: #000; }
-    .type-dragon { background: #7038F8; } .type-steel { background: #B8B8D0; color: #000; }
-    .type-rock { background: #B8A038; } .type-bug { background: #A8B820; }
+    .type-dark { background: #705848; } .type-ice { background: #98D8D8; color: #000; }
+    .type-steel { background: #B8B8D0; color: #000; } .type-psychic { background: #F85888; }
+    .type-fairy { background: #EE99AC; color: #000; }
   </style>
 </head>
 <body>
@@ -87,13 +87,14 @@
   <div class="grid-team" id="teamContainer"></div>
 
   <script>
+    // TU EQUIPO REAL RESTAURADO
     const team = [
-      { id: 472, moves: ['Earthquake', 'Toxic', 'Protect', 'Substitute'] },
-      { id: 94,  moves: ['Shadow Ball', 'Sludge Bomb', 'Focus Blast', 'Will-O-Wisp'] },
-      { id: 491, moves: ['Dark Pulse', 'Nasty Plot', 'Ice Beam', 'Focus Blast'] },
-      { id: 445, moves: ['Outrage', 'Earthquake', 'Swords Dance', 'Fire Fang'] },
-      { id: 212, moves: ['Bullet Punch', 'U-turn', 'Superpower', 'Roost'] },
-      { id: 248, moves: ['Stone Edge', 'Crunch', 'Dragon Dance', 'Fire Punch'] }
+      { id: 472, moves: ['Earthquake', 'Toxic', 'Protect', 'Roost'] },       // Gliscor
+      { id: 94,  moves: ['Shadow Ball', 'Sludge Bomb', 'Focus Blast', 'Will-O-Wisp'] }, // Gengar
+      { id: 491, moves: ['Dark Void', 'Dark Pulse', 'Nasty Plot', 'Dream Eater'] }, // Darkrai
+      { id: 362, moves: ['Ice Beam', 'Spikes', 'Freeze-Dry', 'Explosion'] },    // Glalie
+      { id: 376, moves: ['Meteor Mash', 'Zen Headbutt', 'Bullet Punch', 'Earthquake'] }, // Metagross
+      { id: 778, moves: ['Swords Dance', 'Play Rough', 'Shadow Sneak', 'Drain Punch'] }  // Mimikyu
     ];
 
     const teamContainer = document.getElementById('teamContainer');
@@ -111,7 +112,6 @@
         const def = data.stats.find(s => s.stat.name === 'defense').base_stat;
         const spd = data.stats.find(s => s.stat.name === 'speed').base_stat;
 
-        // Sprites animados GIF de Showdown
         const defaultGif = data.sprites.other.showdown.front_default || data.sprites.front_default;
         const shinyGif = data.sprites.other.showdown.front_shiny || data.sprites.front_shiny;
 
@@ -176,4 +176,3 @@
   </script>
 </body>
 </html>
-
