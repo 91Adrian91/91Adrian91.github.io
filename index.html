@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Mi Equipo Pokémon | Creador Avanzado</title>
+  <title>Mi Equipo Pokémon | Creador Pro</title>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
@@ -20,7 +20,7 @@
     .nav-link:hover { color: #fff; background: rgba(255,255,255,0.1); }
     .nav-link.active { color: #000; background: linear-gradient(135deg, #ffd700, #ff8c00); }
 
-    .main-container { width: 100%; max-width: 1100px; background: rgba(18, 18, 30, 0.92); border: 1px solid rgba(255,255,255,0.15); border-radius: 16px; padding: 20px; box-shadow: 0 15px 35px rgba(0,0,0,0.7); }
+    .main-container { width: 100%; max-width: 1150px; background: rgba(18, 18, 30, 0.92); border: 1px solid rgba(255,255,255,0.15); border-radius: 16px; padding: 20px; box-shadow: 0 15px 35px rgba(0,0,0,0.7); }
     
     header { text-align: center; margin-bottom: 25px; }
     header h1 { font-size: 2.2rem; color: #ffd700; text-shadow: 0 0 10px rgba(255,215,0,0.5); }
@@ -32,20 +32,27 @@
     .search-box button { padding: 12px 24px; border-radius: 25px; border: none; background: linear-gradient(135deg, #ff8c00, #ffd700); color: #000; font-weight: bold; cursor: pointer; transition: 0.3s; }
     .search-box button:hover { transform: scale(1.05); }
 
-    .team-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 20px; }
+    .team-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(330px, 1fr)); gap: 20px; }
     
-    .slot { background: rgba(255,255,255,0.03); border: 2px dashed rgba(255,255,255,0.15); border-radius: 14px; padding: 15px; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 380px; position: relative; transition: 0.3s; }
+    .slot { background: rgba(255,255,255,0.03); border: 2px dashed rgba(255,255,255,0.15); border-radius: 14px; padding: 15px; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 420px; position: relative; transition: 0.3s; }
     .slot.filled { border-style: solid; border-color: rgba(255,215,0,0.4); background: rgba(30, 30, 50, 0.6); justify-content: flex-start; }
 
-    .slot img { height: 90px; object-fit: contain; margin-bottom: 10px; filter: drop-shadow(0 5px 5px rgba(0,0,0,0.5)); }
-    .slot h3 { text-transform: capitalize; color: #fff; margin-bottom: 6px; font-size: 1.2rem; }
+    .sprite-container { display: flex; align-items: center; justify-content: center; gap: 10px; margin: 8px 0; height: 100px; width: 100%; }
+    .sprite-container img { height: 90px; max-width: 120px; object-fit: contain; filter: drop-shadow(0 5px 5px rgba(0,0,0,0.5)); }
+
+    .sprite-controls { display: flex; gap: 8px; margin-bottom: 10px; }
+    .btn-ctrl { background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); color: #fff; padding: 4px 10px; border-radius: 12px; font-size: 0.75rem; cursor: pointer; transition: 0.2s; }
+    .btn-ctrl:hover { background: rgba(255,255,255,0.25); }
+    .btn-ctrl.active-shiny { background: #ffd700; color: #000; font-weight: bold; border-color: #ffd700; }
+
+    .slot h3 { text-transform: capitalize; color: #fff; margin-bottom: 4px; font-size: 1.2rem; }
     
     .types { display: flex; gap: 6px; margin-bottom: 12px; }
     .type-tag { padding: 3px 10px; border-radius: 12px; font-size: 0.75rem; font-weight: bold; text-transform: uppercase; }
 
     .stats-container { width: 100%; background: rgba(0,0,0,0.3); border-radius: 8px; padding: 8px; margin-bottom: 10px; font-size: 0.75rem; }
     .stat-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 4px; }
-    .stat-row span { width: 50px; font-weight: bold; color: #aaa; }
+    .stat-row span { width: 55px; font-weight: bold; color: #aaa; }
     .stat-bar-bg { flex: 1; background: rgba(255,255,255,0.1); height: 8px; border-radius: 4px; margin: 0 8px; overflow: hidden; }
     .stat-bar-fill { height: 100%; background: #ffd700; border-radius: 4px; }
     .iv-input { width: 42px; background: rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.2); color: #ffd700; text-align: center; border-radius: 4px; font-size: 0.75rem; }
@@ -90,7 +97,7 @@
   <div class="main-container">
     <header>
       <h1>🛡️ Creador Avanzado de Equipos</h1>
-      <p>Configura estadísticas, IVs y movimientos para tus 6 Pokémon</p>
+      <p>Sprites animados, versión Shiny, IVs y movimientos integrados</p>
     </header>
 
     <div class="search-box">
@@ -130,9 +137,17 @@
         return;
       }
 
-      // Sprite animado GIF con respaldo a oficial
-      const animatedSprite = data.sprites.versions?.['generation-v']?.['black-white']?.animated?.front_default 
-                          || data.sprites.other['official-artwork'].front_default;
+      // Sprites Normales Animados (Gen 5 / Showdown) + Estáticos de respaldo
+      const animFront = data.sprites.versions?.['generation-v']?.['black-white']?.animated?.front_default 
+                      || data.sprites.front_default;
+      const animBack = data.sprites.versions?.['generation-v']?.['black-white']?.animated?.back_default 
+                     || data.sprites.back_default || animFront;
+
+      // Sprites Shiny Animados + Estáticos
+      const animShinyFront = data.sprites.versions?.['generation-v']?.['black-white']?.animated?.front_shiny 
+                           || data.sprites.front_shiny || animFront;
+      const animShinyBack = data.sprites.versions?.['generation-v']?.['black-white']?.animated?.back_shiny 
+                          || data.sprites.back_shiny || animBack;
 
       const allMoves = data.moves.map(m => m.move.name);
       const initialMoves = allMoves.slice(0, 4);
@@ -140,7 +155,13 @@
       const pokeObj = {
         id: data.id,
         name: data.name,
-        sprite: animatedSprite,
+        isShiny: false,
+        sprites: {
+          front: animFront,
+          back: animBack,
+          shinyFront: animShinyFront,
+          shinyBack: animShinyBack
+        },
         types: data.types.map(t => t.type.name),
         stats: data.stats.map(s => ({ name: s.stat.name, base: s.base_stat })),
         ivs: { hp: 31, attack: 31, defense: 31, 'special-attack': 31, 'special-defense': 31, speed: 31 },
@@ -156,6 +177,12 @@
 
     function removePokemon(index) {
       team.splice(index, 1);
+      saveTeam();
+      renderTeam();
+    }
+
+    function toggleShiny(index) {
+      team[index].isShiny = !team[index].isShiny;
       saveTeam();
       renderTeam();
     }
@@ -187,53 +214,10 @@
 
         if (poke) {
           slot.className = 'slot filled';
-          
+
+          const frontImg = poke.isShiny ? poke.sprites.shinyFront : poke.sprites.front;
+          const backImg = poke.isShiny ? poke.sprites.shinyBack : poke.sprites.back;
+
           const statsHTML = poke.stats.map(s => {
             const shortName = s.name.replace('special-attack', 'SpA').replace('special-defense', 'SpD').replace('attack', 'Atk').replace('defense', 'Def').replace('speed', 'Spe').toUpperCase();
-            const ivVal = poke.ivs[s.name] !== undefined ? poke.ivs[s.name] : 31;
-            const percentage = Math.min(100, (s.base / 150) * 100);
-
-            return `
-              <div class="stat-row">
-                <span>${shortName} ${s.base}</span>
-                <div class="stat-bar-bg"><div class="stat-bar-fill" style="width: ${percentage}%"></div></div>
-                <label style="font-size:0.65rem; color:#aaa; margin-right:2px;">IV:</label>
-                <input type="number" class="iv-input" min="0" max="31" value="${ivVal}" onchange="updateIV(${i}, '${s.name}', this.value)">
-              </div>
-            `;
-          }).join('');
-
-          const movesHTML = [0, 1, 2, 3].map(mIdx => {
-            const currentMove = poke.selectedMoves[mIdx] || '';
-            const options = poke.allAvailableMoves.map(m => `<option value="${m}" ${m === currentMove ? 'selected' : ''}>${m}</option>`).join('');
-            return `<select class="move-select" onchange="updateMove(${i}, ${mIdx}, this.value)">${options}</select>`;
-          }).join('');
-
-          slot.innerHTML = `
-            <button class="btn-remove" onclick="removePokemon(${i})">✕</button>
-            <img src="${poke.sprite}" alt="${poke.name}">
-            <h3>#${poke.id} ${poke.name}</h3>
-            <div class="types">
-              ${poke.types.map(t => `<span class="type-tag type-${t}">${t}</span>`).join('')}
-            </div>
-            <div class="stats-container">
-              ${statsHTML}
-            </div>
-            <div class="moves-section">
-              <div class="moves-title">Movimientos</div>
-              ${movesHTML}
-            </div>
-          `;
-        } else {
-          slot.className = 'slot';
-          slot.innerHTML = `<span style="color: rgba(255,255,255,0.3); font-weight:bold;">Slot ${i + 1} Vacío</span>`;
-        }
-
-        grid.appendChild(slot);
-      }
-    }
-
-    renderTeam();
-  </script>
-</body>
-</html>
+            const ivVal = (poke.ivs && poke.ivs[s.name] !== undefined)
