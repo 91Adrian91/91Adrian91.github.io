@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -20,12 +21,12 @@
     .nav-link:hover { color: #fff; background: rgba(255,255,255,0.1); }
     .nav-link.active { color: #000; background: linear-gradient(135deg, #ffd700, #ff8c00); }
 
-    .main-container { width: 100%; max-width: 950px; background: rgba(18, 18, 30, 0.9); border: 1px solid rgba(255,255,255,0.15); border-radius: 16px; padding: 20px; box-shadow: 0 15px 35px rgba(0,0,0,0.7); }
+    .main-container { width: 100%; max-width: 950px; background: rgba(18, 18, 30, 0.92); border: 1px solid rgba(255,255,255,0.15); border-radius: 16px; padding: 20px; box-shadow: 0 15px 35px rgba(0,0,0,0.7); }
 
-    /* MENU DE SELECCION DE MODO */
+    /* MENU DE SELECCION */
     .mode-selector { text-align: center; display: flex; flex-direction: column; align-items: center; gap: 20px; padding: 20px; }
-    .btn-mode { background: linear-gradient(135deg, #4b6cb7, #182848); color: #fff; border: 1px solid rgba(255,255,255,0.2); padding: 15px 25px; border-radius: 12px; font-weight: bold; font-size: 1.1rem; cursor: pointer; transition: 0.3s; width: 100%; max-width: 320px; }
-    .btn-mode:hover { transform: translateY(-3px); background: linear-gradient(135deg, #ff8c00, #ffd700); color: #000; }
+    .btn-mode { background: linear-gradient(135deg, #ff8c00, #ffd700); color: #000; border: none; padding: 15px 25px; border-radius: 12px; font-weight: bold; font-size: 1.1rem; cursor: pointer; transition: 0.3s; width: 100%; max-width: 320px; box-shadow: 0 5px 15px rgba(255, 140, 0, 0.3); }
+    .btn-mode:hover { transform: translateY(-3px); scale: 1.02; }
 
     /* TEAMPICKER */
     .team-picker { display: none; flex-direction: column; gap: 15px; }
@@ -37,34 +38,46 @@
     .custom-slot img { height: 60px; }
     .btn-remove { position: absolute; top: 4px; right: 6px; background: #f44336; border: none; color: #fff; border-radius: 50%; width: 20px; height: 20px; cursor: pointer; font-size: 0.7rem; }
 
-    /* CAMPO DE BATALLA */
+    /* ARENA SHOWDOWN */
     .battle-field { display: none; flex-direction: column; gap: 15px; }
-    .arena { height: 250px; background: linear-gradient(to bottom, #111e38, #1c352d); border-radius: 12px; position: relative; border: 1px solid #444; overflow: hidden; }
+    .arena { height: 320px; background: radial-gradient(circle at center, #2b4538 0%, #111e2e 100%); border-radius: 12px; position: relative; border: 1px solid rgba(255,255,255,0.2); overflow: hidden; box-shadow: inset 0 0 50px rgba(0,0,0,0.8); }
     
-    .poke-stage { position: absolute; display: flex; flex-direction: column; align-items: center; width: 180px; }
-    .stage-foe { top: 20px; right: 30px; }
-    .stage-player { bottom: 15px; left: 30px; }
+    .poke-stage { position: absolute; display: flex; flex-direction: column; align-items: center; width: 200px; }
+    .stage-foe { top: 25px; right: 40px; }
+    .stage-player { bottom: 15px; left: 40px; }
 
-    .status-bar { background: rgba(0,0,0,0.75); border: 1px solid #555; border-radius: 8px; padding: 6px 12px; width: 100%; font-size: 0.85rem; margin-bottom: 5px; }
-    .hp-bg { background: #333; height: 8px; border-radius: 4px; overflow: hidden; margin-top: 4px; }
-    .hp-fill { background: #4CAF50; height: 100%; width: 100%; transition: width 0.5s ease; }
+    .platform { position: absolute; bottom: 0; width: 160px; height: 30px; background: rgba(255,255,255,0.1); border-radius: 50%; z-index: 1; transform: scaleY(0.4); border: 2px solid rgba(255,255,255,0.2); }
 
-    .sprite-foe { height: 110px; filter: drop-shadow(0 5px 5px rgba(0,0,0,0.5)); image-rendering: pixelated; }
-    .sprite-player { height: 120px; filter: drop-shadow(0 5px 5px rgba(0,0,0,0.5)); image-rendering: pixelated; }
+    .status-bar { background: rgba(10, 10, 20, 0.85); border: 1px solid rgba(255,255,255,0.2); border-radius: 8px; padding: 6px 12px; width: 100%; font-size: 0.85rem; z-index: 5; }
+    .hp-bg { background: #222; height: 8px; border-radius: 4px; overflow: hidden; margin-top: 4px; border: 1px solid #444; }
+    .hp-fill { background: #4CAF50; height: 100%; width: 100%; transition: width 0.4s ease-in-out; }
 
-    /* CONTROLES Y LOG */
+    /* SPRITES CON ANIMACION SHOWDOWN */
+    .sprite-foe { height: 130px; z-index: 2; image-rendering: pixelated; filter: drop-shadow(0 10px 8px rgba(0,0,0,0.6)); }
+    .sprite-player { height: 140px; z-index: 2; image-rendering: pixelated; filter: drop-shadow(0 10px 8px rgba(0,0,0,0.6)); }
+
+    /* ANIMACION AL ATAQUE */
+    .shake { animation: shake 0.4s cubic-bezier(.36,.07,.19,.97) both; }
+    @keyframes shake {
+      10%, 90% { transform: translate3d(-2px, 0, 0); }
+      20%, 80% { transform: translate3d(4px, 0, 0); }
+      30%, 50%, 70% { transform: translate3d(-6px, 0, 0); }
+      40%, 60% { transform: translate3d(6px, 0, 0); }
+    }
+
+    /* CONTROLES ESTILO SHOWDOWN */
     .battle-controls { display: grid; grid-template-columns: 2fr 1fr; gap: 15px; }
     .moves-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
-    .btn-move { background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.2); color: #fff; padding: 12px; border-radius: 8px; cursor: pointer; font-weight: bold; transition: 0.2s; text-align: left; display: flex; flex-direction: column; }
-    .btn-move:hover { background: rgba(255,255,255,0.2); border-color: #ffd700; }
-    .move-type { font-size: 0.7rem; color: #ffd700; text-transform: uppercase; margin-top: 2px; }
+    .btn-move { background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.2); color: #fff; padding: 12px; border-radius: 8px; cursor: pointer; font-weight: bold; transition: 0.2s; text-align: left; display: flex; flex-direction: column; justify-content: space-between; }
+    .btn-move:hover { background: rgba(255,255,255,0.2); border-color: #ffd700; transform: scale(1.02); }
+    .move-type { font-size: 0.7rem; color: #ffd700; text-transform: uppercase; margin-top: 4px; }
 
-    .switch-team { display: flex; flex-direction: column; gap: 6px; background: rgba(0,0,0,0.4); padding: 8px; border-radius: 8px; }
-    .btn-switch { background: rgba(255,255,255,0.05); border: 1px solid #444; color: #fff; padding: 6px; border-radius: 6px; cursor: pointer; font-size: 0.8rem; text-align: left; display: flex; align-items: center; gap: 6px; }
-    .btn-switch:hover { background: rgba(255,255,255,0.15); }
-    .btn-switch img { height: 24px; }
+    .switch-team { display: flex; flex-direction: column; gap: 6px; background: rgba(0,0,0,0.4); padding: 10px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); }
+    .btn-switch { background: rgba(255,255,255,0.05); border: 1px solid #444; color: #fff; padding: 6px 10px; border-radius: 6px; cursor: pointer; font-size: 0.8rem; text-align: left; display: flex; align-items: center; justify-content: space-between; }
+    .btn-switch:hover { background: rgba(255,255,255,0.2); }
+    .btn-switch img { height: 28px; }
 
-    .log-box { background: #000; border: 1px solid #333; height: 100px; border-radius: 8px; padding: 10px; font-family: monospace; font-size: 0.85rem; overflow-y: auto; color: #4af626; margin-top: 10px; }
+    .log-box { background: #080810; border: 1px solid #222; height: 110px; border-radius: 8px; padding: 10px; font-family: monospace; font-size: 0.85rem; overflow-y: auto; color: #39ff14; margin-top: 10px; }
 
     @media (max-width: 600px) {
       .battle-controls { grid-template-columns: 1fr; }
@@ -88,54 +101,56 @@
     <!-- SELECCION DE MODO -->
     <div class="mode-selector" id="modeMenu">
       <h2 style="color: #ffd700;">⚔️ Simulador de Batalla Showdown</h2>
-      <p style="color: #aaa;">Selecciona cómo deseas combatir:</p>
-      <button class="btn-mode" onclick="startRandomBattle()">🎲 Batalla Aleatoria (Random)</button>
-      <button class="btn-mode" onclick="openCustomBuilder()">📝 Crear tu propio equipo</button>
+      <p style="color: #aaa;">Combate en tiempo real con Pokémon animados</p>
+      <button class="btn-mode" onclick="startRandomBattle()">🎲 Batalla Aleatoria (Random Battle)</button>
+      <button class="btn-mode" style="background: linear-gradient(135deg, #4b6cb7, #182848); color: #fff;" onclick="openCustomBuilder()">📝 Crear tu propio equipo</button>
     </div>
 
     <!-- SELECCIONADOR DE EQUIPO PROPIO -->
     <div class="team-picker" id="teamPicker">
-      <h3 style="text-align:center; color:#ffd700;">Arma tu equipo de 6 Pokémon</h3>
+      <h3 style="text-align:center; color:#ffd700;">Elige hasta 6 Pokémon</h3>
       <div class="search-box">
-        <input type="text" id="pokeSearchInput" class="input-poke" placeholder="Nombre o ID (Ej: Lucario)">
+        <input type="text" id="pokeSearchInput" class="input-poke" placeholder="Ejemplo: Gengar, Lucario...">
         <button class="btn-add" onclick="addPokemonToCustom()">Añadir</button>
       </div>
       <div class="custom-team-list" id="customTeamList"></div>
       <button class="btn-mode" style="margin: 15px auto 0 auto;" onclick="startCustomBattle()">¡Empezar Combate! ⚔️</button>
     </div>
 
-    <!-- ARENA DE BATTALA -->
+    <!-- ARENA DE COMBATE -->
     <div class="battle-field" id="battleField">
       <div class="arena">
         <!-- Oponente -->
         <div class="poke-stage stage-foe">
           <div class="status-bar">
-            <span id="foeName">Oponente</span> <span style="float:right;">Lv100</span>
+            <span id="foeName" style="text-transform:capitalize; font-weight:bold;">Oponente</span> <span style="float:right; color:#ffd700;">Lv100</span>
             <div class="hp-bg"><div class="hp-fill" id="foeHpBar"></div></div>
           </div>
           <img id="foeSprite" class="sprite-foe" src="" alt="Foe">
+          <div class="platform"></div>
         </div>
 
         <!-- Jugador -->
         <div class="poke-stage stage-player">
           <img id="playerSprite" class="sprite-player" src="" alt="Player">
+          <div class="platform"></div>
           <div class="status-bar">
-            <span id="playerName">Jugador</span> <span style="float:right;">Lv100</span>
+            <span id="playerName" style="text-transform:capitalize; font-weight:bold;">Jugador</span> <span style="float:right; color:#ffd700;">Lv100</span>
             <div class="hp-bg"><div class="hp-fill" id="playerHpBar"></div></div>
           </div>
         </div>
       </div>
 
-      <!-- Controles de Ataque y Cambios -->
+      <!-- Controles -->
       <div class="battle-controls">
         <div class="moves-grid" id="movesGrid"></div>
         <div class="switch-team">
-          <span style="font-size:0.75rem; color:#aaa; font-weight:bold;">CAMBIAR POKÉMON</span>
-          <div id="switchList"></div>
+          <span style="font-size:0.75rem; color:#aaa; font-weight:bold; margin-bottom: 4px;">EQUIPO (CAMBIAR)</span>
+          <div id="switchList" style="display:flex; flex-direction:column; gap:4px;"></div>
         </div>
       </div>
 
-      <!-- Registro del Combate -->
+      <!-- Registro de combate -->
       <div class="log-box" id="battleLog"></div>
     </div>
 
@@ -148,7 +163,6 @@
     let activeFoeIdx = 0;
     let customList = [];
 
-    // ATAQUES POR DEFECTO POR TIPO PARA MOSTRAR SHOWDOWN REAL
     const moveDatabase = {
       fire: { name: 'Flamethrower', power: 90, type: 'fire' },
       water: { name: 'Surf', power: 90, type: 'water' },
@@ -163,7 +177,7 @@
       bug: { name: 'Bug Buzz', power: 90, type: 'bug' },
       rock: { name: 'Stone Edge', power: 100, type: 'rock' },
       ghost: { name: 'Shadow Ball', power: 80, type: 'ghost' },
-      dragon: { name: 'Dragon Pulse', power: 85, type: Dragon: 'dragon' },
+      dragon: { name: 'Dragon Pulse', power: 85, type: 'dragon' },
       dark: { name: 'Dark Pulse', power: 80, type: 'dark' },
       steel: { name: 'Flash Cannon', power: 80, type: 'steel' },
       fairy: { name: 'Moonblast', power: 95, type: 'fairy' },
@@ -176,9 +190,12 @@
         if (!res.ok) return null;
         const data = await res.json();
         
-        // Asignar movimientos según sus tipos
         const moves = data.types.map(t => moveDatabase[t.type.name] || moveDatabase.normal);
         while (moves.length < 4) moves.push(moveDatabase.normal);
+
+        // ANIMACIONES GIF REALES SHOWDOWN DE ESPALDA Y FRENTE
+        const frontGif = data.sprites.other.showdown.front_default || data.sprites.front_default;
+        const backGif = data.sprites.other.showdown.back_default || data.sprites.back_default || frontGif;
 
         return {
           id: data.id,
@@ -189,8 +206,8 @@
           def: data.stats[2].base_stat,
           spd: data.stats[5].base_stat,
           types: data.types.map(t => t.type.name),
-          frontGif: data.sprites.other.showdown.front_default || data.sprites.front_default,
-          backGif: data.sprites.other.showdown.back_default || data.sprites.back_default || data.sprites.front_default,
+          frontGif: frontGif,
+          backGif: backGif,
           icon: data.sprites.front_default,
           moves: moves.slice(0, 4)
         };
@@ -199,13 +216,12 @@
       }
     }
 
-    // --- MODO ALEATORIO ---
     async function startRandomBattle() {
       document.getElementById('modeMenu').style.display = 'none';
-      log("Cargando combate aleatorio...");
+      log("Cargando Pokémon con animaciones...");
 
-      const randomPlayerIds = Array.from({length: 6}, () => Math.floor(Math.random() * 600) + 1);
-      const randomFoeIds = Array.from({length: 6}, () => Math.floor(Math.random() * 600) + 1);
+      const randomPlayerIds = Array.from({length: 6}, () => Math.floor(Math.random() * 500) + 1);
+      const randomFoeIds = Array.from({length: 6}, () => Math.floor(Math.random() * 500) + 1);
 
       playerTeam = await Promise.all(randomPlayerIds.map(id => fetchPokeData(id)));
       foeTeam = await Promise.all(randomFoeIds.map(id => fetchPokeData(id)));
@@ -213,7 +229,6 @@
       initArena();
     }
 
-    // --- MODO CREAR EQUIPO ---
     function openCustomBuilder() {
       document.getElementById('modeMenu').style.display = 'none';
       document.getElementById('teamPicker').style.display = 'flex';
@@ -221,7 +236,7 @@
     }
 
     async function addPokemonToCustom() {
-      if (customList.length >= 6) return alert("¡El equipo ya tiene 6 Pokémon!");
+      if (customList.length >= 6) return alert("¡El equipo ya está lleno!");
       const val = document.getElementById('pokeSearchInput').value.trim();
       if (!val) return;
 
@@ -251,7 +266,7 @@
             <span style="font-size:0.75rem; text-transform:capitalize;">${customList[i].name}</span>
           `;
         } else {
-          slot.innerHTML = `<span style="color:#555; font-size:0.8rem;">Vacío ${i+1}</span>`;
+          slot.innerHTML = `<span style="color:#555; font-size:0.8rem;">Slot ${i+1}</span>`;
         }
         container.appendChild(slot);
       }
@@ -261,7 +276,6 @@
       if (customList.length === 0) return alert("Agrega al menos 1 Pokémon");
       playerTeam = customList;
       
-      // Foe aleatorio
       const randomFoeIds = Array.from({length: customList.length}, () => Math.floor(Math.random() * 500) + 1);
       foeTeam = await Promise.all(randomFoeIds.map(id => fetchPokeData(id)));
 
@@ -269,100 +283,96 @@
       initArena();
     }
 
-    // --- INICIALIZAR ARENA ---
     function initArena() {
       document.getElementById('battleField').style.display = 'flex';
       activePlayerIdx = 0;
       activeFoeIdx = 0;
       updateField();
-      log(`¡Comienza el combate! Enviado ${playerTeam[0].name.toUpperCase()}`);
+      log(`¡Comienza el combate Showdown! ¡Adelante ${playerTeam[0].name.toUpperCase()}!`);
     }
 
     function updateField() {
       const p = playerTeam[activePlayerIdx];
       const f = foeTeam[activeFoeIdx];
 
-      // Jugador UI
       document.getElementById('playerName').textContent = p.name;
       document.getElementById('playerSprite').src = p.backGif;
       const pPct = Math.max(0, (p.currentHp / p.maxHp) * 100);
       document.getElementById('playerHpBar').style.width = pPct + '%';
 
-      // Oponente UI
       document.getElementById('foeName').textContent = f.name;
       document.getElementById('foeSprite').src = f.frontGif;
       const fPct = Math.max(0, (f.currentHp / f.maxHp) * 100);
       document.getElementById('foeHpBar').style.width = fPct + '%';
 
-      // Botones de Ataque
       const movesContainer = document.getElementById('movesGrid');
       movesContainer.innerHTML = '';
       p.moves.forEach(m => {
         const btn = document.createElement('button');
         btn.className = 'btn-move';
-        btn.innerHTML = `<span>${m.name}</span><span class="move-type">${m.type}</span>`;
+        btn.innerHTML = `<span>${m.name}</span><span class="move-type">Tipo: ${m.type}</span>`;
         btn.onclick = () => executeTurn(m);
         if (p.currentHp <= 0) btn.disabled = true;
         movesContainer.appendChild(btn);
       });
 
-      // Lista de Cambios
       const switchContainer = document.getElementById('switchList');
       switchContainer.innerHTML = '';
       playerTeam.forEach((member, i) => {
         if (i === activePlayerIdx) return;
         const btn = document.createElement('button');
         btn.className = 'btn-switch';
-        btn.innerHTML = `<img src="${member.icon}"> ${member.name} (${Math.round((member.currentHp/member.maxHp)*100)}%)`;
+        btn.innerHTML = `<span style="text-transform:capitalize;"><img src="${member.icon}" style="vertical-align:middle;"> ${member.name}</span> <span>${Math.round((member.currentHp/member.maxHp)*100)}%</span>`;
         btn.onclick = () => switchPokemon(i);
         if (member.currentHp <= 0) btn.disabled = true;
         switchContainer.appendChild(btn);
       });
     }
 
-    // --- LOGICA DE COMBATE ESTILO SHOWDOWN ---
     function executeTurn(playerMove) {
       const p = playerTeam[activePlayerIdx];
       const f = foeTeam[activeFoeIdx];
 
       const foeMove = f.moves[Math.floor(Math.random() * f.moves.length)];
 
-      // Determinar orden por Velocidad (SPD)
       if (p.spd >= f.spd) {
-        attack(p, f, playerMove, () => {
-          if (f.currentHp > 0) attack(f, p, foeMove, checkFaints);
+        attack(p, f, playerMove, 'foeSprite', () => {
+          if (f.currentHp > 0) attack(f, p, foeMove, 'playerSprite', checkFaints);
           else checkFaints();
         });
       } else {
-        attack(f, p, foeMove, () => {
-          if (p.currentHp > 0) attack(p, f, playerMove, checkFaints);
+        attack(f, p, foeMove, 'playerSprite', () => {
+          if (p.currentHp > 0) attack(p, f, playerMove, 'foeSprite', checkFaints);
           else checkFaints();
         });
       }
     }
 
-    function attack(attacker, defender, move, callback) {
+    function attack(attacker, defender, move, targetSpriteId, callback) {
       log(`${attacker.name.toUpperCase()} usó ${move.name}!`);
-      
+
+      // EFECTO VISUAL DE AGITACIÓN
+      const targetImg = document.getElementById(targetSpriteId);
+      targetImg.classList.add('shake');
+      setTimeout(() => targetImg.classList.remove('shake'), 400);
+
       const damage = Math.floor(((20 * move.power * (attacker.atk / defender.def)) / 50) + 2);
       defender.currentHp = Math.max(0, defender.currentHp - damage);
 
-      // Sonido de Grito
       new Audio(`https://raw.githubusercontent.com/PokeAPI/cries/main/cries/pokemon/latest/${attacker.id}.ogg`).play().catch(()=>{});
 
       updateField();
-      setTimeout(callback, 600);
+      setTimeout(callback, 700);
     }
 
     function switchPokemon(newIdx) {
       if (playerTeam[newIdx].currentHp <= 0) return;
       activePlayerIdx = newIdx;
-      log(`¡Adelante ${playerTeam[activePlayerIdx].name.toUpperCase()}!`);
+      log(`¡Vuelve! ¡Adelante ${playerTeam[activePlayerIdx].name.toUpperCase()}!`);
       
-      // Oponente ataca en el cambio
       const f = foeTeam[activeFoeIdx];
       const foeMove = f.moves[Math.floor(Math.random() * f.moves.length)];
-      attack(f, playerTeam[activePlayerIdx], foeMove, checkFaints);
+      attack(f, playerTeam[activePlayerIdx], foeMove, 'playerSprite', checkFaints);
     }
 
     function checkFaints() {
@@ -370,11 +380,11 @@
       const f = foeTeam[activeFoeIdx];
 
       if (f.currentHp <= 0) {
-        log(`¡${f.name.toUpperCase()} rival se ha debilitado!`);
+        log(`¡${f.name.toUpperCase()} enemigo se ha debilitado!`);
         activeFoeIdx++;
         if (activeFoeIdx >= foeTeam.length) {
-          log("🏆 ¡HAS GANADO EL COMBATE!");
-          alert("🏆 ¡Has ganado el combate!");
+          log("🏆 ¡VICTORIA! Has derrotado al entrenador rival.");
+          alert("🏆 ¡Has ganado la batalla Showdown!");
           return;
         } else {
           log(`El rival saca a ${foeTeam[activeFoeIdx].name.toUpperCase()}`);
@@ -385,7 +395,7 @@
         log(`¡Tu ${p.name.toUpperCase()} se ha debilitado!`);
         const aliveIdx = playerTeam.findIndex(m => m.currentHp > 0);
         if (aliveIdx === -1) {
-          log("💀 ¡HAS PERDIDO EL COMBATE!");
+          log("💀 DERROTA. Todos tus Pokémon se han debilitado.");
           alert("💀 Has sido derrotado.");
           return;
         }
